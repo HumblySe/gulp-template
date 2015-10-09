@@ -1,24 +1,32 @@
 
 // Först hämtar vi in gulp självt IN TRUE NODE STYLEE
 var gulp = require("gulp"),
+
 	// Sedan hämtar vi in alla nödvändiga plugins
-	gutil = require("gulp-util"),
+	gutil 		= require("gulp-util"),
+	uglify 		= require("gulp-uglify"),
+	browserify 	= require('browserify'),
+	source 		= require('vinyl-source-stream'),
+	buffer 		= require('vinyl-buffer');
+/*
 	jshint = require("gulp-jshint"),
 	stylish = require("jshint-stylish"),
 	concat = require("gulp-concat"),
-	uglify = require("gulp-uglify"),
 	rename = require("gulp-rename"),
 	header = require("gulp-header"),
 	phplint = require("./gulp-phplint"),
 	less = require("gulp-less"),
 	minifyCss = require("gulp-minify-css"),
 	es = require("event-stream"),
+*/
+
 	/*
 	* Vi hämtar också in package.json-filen. Notera att vi
 	* *inte* behöver jiddra med någon json-reader som i
 	* grunt!
 	*/
 	pkg = require("./package.json"),
+
 	/*
 	* Vi behöver inte sätta upp någon lokal variabel
 	* för var javascriptfilerna ligger, eftersom
@@ -27,6 +35,7 @@ var gulp = require("gulp"),
 	* vi vill ha samma banner på minifierad CSS och JS,
 	* och de får olika pipe-kedjor.
 	*/
+
 	banner = ["/**",
 		"* <%= pkg.name %>",
 		"* <%= pkg.description %>",
@@ -34,6 +43,7 @@ var gulp = require("gulp"),
 		"* Last modified: <%= formatteddate %>",
 		"*/",
 		""].join("\n");
+
 /*
 * Här sätter vi upp en gulp-task. På samma sätt som i
 * grunt kan man skapa flera tasks och sedan välja
@@ -42,10 +52,21 @@ var gulp = require("gulp"),
 * någon task.
 */
 gulp.task("js", function() {
-	// Här startar vi en pipe-kedja genom att ange vilken
-	// fil/vilka filer vi ska utgå ifrån. Vi börjar med
-	// JS-filerna.	
-	return gulp.src("./build/js/**/*.js")
+	
+	var b = browserify({
+		entries: './build/js/index.js',
+		debug: true
+	});
+
+	return b.bundle()
+		.pipe(source('script.js'))
+		.pipe(buffer())
+		.pipe(sourcemaps.init({loadMaps: true}))
+			.pipe(uglify())
+			.on('error', gutil.log)
+		.pipe(sourcemaps.write('./build/js'))
+		.pipe(gulp.dest('./js/'));
+		/*
 		// Dessa pipas in i jshint...
 		.pipe(jshint())
 		// ...som pipar js-filerna, och resultatet av
@@ -74,14 +95,16 @@ gulp.task("js", function() {
 		// och pipar den till gulp.dest igen,
 		// som sparar ner den under nya namnet
 		.pipe(gulp.dest("./js/"));
+		*/
 });
-gulp.task("css", function() {
+
+//gulp.task("css", function() {
 	/*
 	* Eftersom Gulp hela tiden jobbar med streams måste vi
 	* hitta ett sätt att kombinera flera streams. Detta kan vi
 	* göra med event-stream.merge.
 	*/
-	return es.merge(
+//	return es.merge(
 		/*
 		* I detta fall blir det en tvåstegsraket, eftersom vi
 		* först vill köra LESS på våra less-filer och sedan
@@ -90,29 +113,25 @@ gulp.task("css", function() {
 		* steg, men vafan.
 		*/ 
 		// Börja med att köra LESS på de olika less-filerna...
-		gulp.src(["./libs/bootstrap/less/bootstrap.less",
-			"./libs/bootstrap/less/theme.less",
-			"./build/less/style.less"])
-		.pipe(less()),
+//		gulp.src(["./libs/bootstrap/less/bootstrap.less",
+//			"./libs/bootstrap/less/theme.less",
+//			"./build/less/style.less"])
+//		.pipe(less()),
 		// ...och lägg ihop dessa med de redan befintliga css-filerna
-		gulp.src("./build/css/**/*.css")
-	)
+//		gulp.src("./build/css/**/*.css")
+//	)
 	// Nu har vi en samling css-filer i streamen, vi börjar med att
 	// lägga ihop dem till en enda
-	.pipe(concat("style.css"))
+//	.pipe(concat("style.css"))
 	// Vi sparar den fysiskt i ./css
-	.pipe(gulp.dest("./css/"))
+//	.pipe(gulp.dest("./css/"))
 	// ...sedan tar vi streamen och minifierar den
-	.pipe(minifyCss())
+//	.pipe(minifyCss())
 	// ...och lägger till samma banner som tidigare
-	.pipe(header(banner, { pkg: pkg, formatteddate: new Date().toISOString() }))
+//	.pipe(header(banner, { pkg: pkg, formatteddate: new Date().toISOString() }))
 	// ...döper om den till style.min.css
-	.pipe(rename("style.min.css"))
+//	.pipe(rename("style.min.css"))
 	// ...och sparar den minifierade, headers-tillagda filen i ./css/
-	.pipe(gulp.dest("./css/"))
-});
-gulp.task("phplint", function() {
-	return gulp.src("*.php")
-	.pipe(phplint())
-});
-gulp.task("default", ["js", "css", "phplint"]);
+//	.pipe(gulp.dest("./css/"))
+//});
+gulp.task("default", ["js"]);
