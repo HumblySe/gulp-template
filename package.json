@@ -1,0 +1,19 @@
+{
+  "name": "gulp-template",
+  "version": "1.0.0",
+  "description": "Humbly gulp template",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HumblySe/gulp-template.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HumblySe/gulp-template/issues"
+  },
+  "homepage": "https://github.com/HumblySe/gulp-template#readme"
+}
