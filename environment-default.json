@@ -1,4 +1,17 @@
 {
 	"environment": "dev",
-	"proxy": "127.0.0.1:8888"
+	"proxy": "127.0.0.1:8888",
+    "vendors": [
+        "jquery",
+        "bootstrap",
+        "testPlugin"
+    ],
+
+    "vendor_path": [
+        "build/plugins/"
+    ],
+
+    "app_path": [
+        "./build/js/**.js"
+    ]
 }

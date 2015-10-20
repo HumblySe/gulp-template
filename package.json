@@ -3,6 +3,16 @@
   "version": "1.0.0",
   "description": "Humbly gulp template",
   "main": "gulpfile.js",
+  "contributors": [
+    {
+      "name": "Janne Mårtensgård",
+      "email": "janne.martensgard@humbly.se"
+    },
+    {
+      "name": "Axel Nilsson",
+      "email": "axel.nilsson@humbly.se"
+    }
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,14 +28,21 @@
   },
   "homepage": "https://github.com/HumblySe/gulp-template#readme",
   "devDependencies": {
+    "babel-loader": "^5.3.2",
     "browser-sync": "^2.9.11",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
     "gulp-less": "^3.0.3",
     "gulp-minify-css": "^1.2.1",
     "gulp-rename": "^1.2.2",
-    "gulp-sourcemaps": "^1.6.0"
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-util": "^3.0.7",
+    "gulp-watch": "^4.3.5",
+    "jscs": "^2.3.0",
+    "webpack": "^1.12.2",
+    "webpack-dev-server": "^1.12.0"
   },
   "dependencies": {
+    "jquery": "^2.1.4"
   }
 }
