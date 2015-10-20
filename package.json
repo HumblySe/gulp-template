@@ -12,19 +12,20 @@
   },
   "author": "",
   "license": "ISC",
+  "private": "true",
   "bugs": {
     "url": "https://github.com/HumblySe/gulp-template/issues"
   },
   "homepage": "https://github.com/HumblySe/gulp-template#readme",
-  "devDependencies": {},
-  "dependencies": {
+  "devDependencies": {
+    "browser-sync": "^2.9.11",
     "gulp": "^3.9.0",
-    "gulp-browserify": "^0.5.1",
     "gulp-concat": "^2.6.0",
-    "gulp-embedlr": "^0.5.2",
     "gulp-less": "^3.0.3",
-    "gulp-livereload": "^3.8.1",
     "gulp-minify-css": "^1.2.1",
-    "tiny-lr": "^0.2.1"
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^1.6.0"
+  },
+  "dependencies": {
   }
 }
