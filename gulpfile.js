@@ -1,3 +1,14 @@
+/*
+    var gulp = require('gulp');
+var gutil = require('gulp-util');
+var env = require('./environment.json');
+var concat = require('gulp-concat');
+var less = require('gulp-less');
+var minifycss = require('gulp-minify-css');
+var sourcemaps = require('gulp-sourcemaps');
+var rename = require('gulp-rename');
+var browsersync = require('browser-sync').create();
+*/
 var gulp = 		  require('gulp'),
 	gutil = 	  require("gulp-util"),
 	env = 		  require('./environment-default.json'),
@@ -133,10 +144,10 @@ gulp.task("dist:webpack", function(callback) {
 
 // dev tasks
 gulp.task('dev:css', function(cb) {
-    console.log('mapping style');
-	gulp.src('./build/less/style.less')
+	return gulp.src('./build/less/style.less')
 		.pipe(sourcemaps.init())
 		.pipe(less())
+        .on('error', gutil.log)
 		.pipe(sourcemaps.write())
 		.pipe(gulp.dest('./dist/css'))
 		.pipe(browsersync.stream());
@@ -144,26 +155,26 @@ gulp.task('dev:css', function(cb) {
 
 gulp.task('dev:watch', function() {
 
-	gutil.log(gutil.colors.green("Now watching"), '[', gutil.colors.cyan('./build/less/style.less'), ']\n');
-    gulp.watch(['./build/less/style.less'], ["dev:css", function() { console.log('csswatch'); }]);
-
 	gutil.log(gutil.colors.green("Now watching"), '[', gutil.colors.cyan(config.app_path), ']\n');
     watch(config.app_path, function() {
         gulp.run(["dev:webpack"]);
     });
+
+    gutil.log(gutil.colors.green("Now watching"), '[', gutil.colors.cyan('./build/less/style.less'), ']\n');
+    return gulp.watch('./build/less/style.less', ['dev:css']);
+
 });
 
 gulp.task('dev:browsersync', function() {
-	console.log(env.proxy);
-	browsersync.init({
-		proxy: env.proxy,
-		port: 9999
-	});
+	var options = env.proxy ? { proxy: env.proxy } : { server: { basedir: './'} };
+    options.files = ['/dist/css/style.css'];
+    options.port = env.port;
+	browsersync.init(options);
 });
 
 // vendor tasks
 gulp.task('vendor:css', function(cb) {
-	gulp.src('./build/less/vendor.less')
+	return gulp.src('./build/less/vendor.less')
 		.pipe(sourcemaps.init())
 		.pipe(less())
 		.pipe(sourcemaps.write())
@@ -172,7 +183,7 @@ gulp.task('vendor:css', function(cb) {
 
 // dist tasks
 gulp.task('dist:vendor-css', function(cb) {
-	gulp.src('./build/less/vendor.less')
+	return gulp.src('./build/less/vendor.less')
 		.pipe(sourcemaps.init())
 		.pipe(less())
 		.pipe(minifycss())
@@ -182,7 +193,7 @@ gulp.task('dist:vendor-css', function(cb) {
 });
 
 gulp.task('dist:css', function(cb) {
-	gulp.src('./build/less/style.css')
+	return gulp.src('./build/less/style.css')
 		.pipe(sourcemaps.init())
 		.pipe(less())
 		.pipe(minifycss())
@@ -191,8 +202,7 @@ gulp.task('dist:css', function(cb) {
 		.pipe(gulp.dest('./dist/css'))
 });
 
+// Register actual tasks
 gulp.task('dev', ['vendor:webpack', 'dev:css', 'dev:webpack', 'dev:watch', 'dev:browsersync']);
-
 gulp.task('vendor', ['vendor:css', 'vendor:webpack']);
-
 gulp.task('dist', ['dist:vendor-css','dist:css', 'dist:webpack']);

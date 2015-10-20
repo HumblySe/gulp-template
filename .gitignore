@@ -14,3 +14,4 @@ bower_components
 .idea
 .DS_Store
 environment.json
+dist/**

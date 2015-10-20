@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Humbly gulp template",
   "main": "gulpfile.js",
+
   "contributors": [
     {
       "name": "Janne Mårtensgård",
@@ -13,19 +14,24 @@
       "email": "axel.nilsson@humbly.se"
     }
   ],
+
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/HumblySe/gulp-template.git"
   },
+
   "author": "",
   "license": "ISC",
   "private": "true",
+
   "bugs": {
     "url": "https://github.com/HumblySe/gulp-template/issues"
   },
+
   "homepage": "https://github.com/HumblySe/gulp-template#readme",
   "devDependencies": {
     "babel-loader": "^5.3.2",
