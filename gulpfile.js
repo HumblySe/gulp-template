@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var gutil = require('gulp-util');
 var env = require('./environment.json');
 var concat = require('gulp-concat');
 var less = require('gulp-less');
@@ -9,29 +10,29 @@ var browsersync = require('browser-sync').create();
 
 // dev tasks
 gulp.task('dev:css', function(cb) {
-	gulp.src('./build/less/style.less')
+	return gulp.src('./build/less/style.less')
 		.pipe(sourcemaps.init())
 		.pipe(less())
+        .on('error', gutil.log)
 		.pipe(sourcemaps.write())
 		.pipe(gulp.dest('./dist/css'))
 		.pipe(browsersync.stream());
 });
 
 gulp.task('dev:watch', function() {
-	gulp.watch('build/less/style.less', function() { gulp.run('dev:css'); });
+	return gulp.watch('./build/less/style.less', ['dev:css']);
 });
 
 gulp.task('dev:browsersync', function() {
-	console.log(env.proxy);
-	browsersync.init({
-		proxy: env.proxy,
-		port: 9999
-	});
+	var options = env.proxy ? { proxy: env.proxy } : { server: { basedir: './'} };
+    options.files = ['/dist/css/style.css'];
+    options.port = env.port;
+	browsersync.init(options);
 });
 
 // vendor tasks
 gulp.task('vendor:css', function(cb) {
-	gulp.src('./build/less/vendor.less')
+	return gulp.src('./build/less/vendor.less')
 		.pipe(sourcemaps.init())
 		.pipe(less())
 		.pipe(sourcemaps.write())
@@ -40,7 +41,7 @@ gulp.task('vendor:css', function(cb) {
 
 // dist tasks
 gulp.task('dist:vendor-css', function(cb) {
-	gulp.src('./build/less/vendor.less')
+	return gulp.src('./build/less/vendor.less')
 		.pipe(sourcemaps.init())
 		.pipe(less())
 		.pipe(minifycss())
@@ -49,7 +50,7 @@ gulp.task('dist:vendor-css', function(cb) {
 		.pipe(gulp.dest('./dist/css'))
 });
 gulp.task('dist:css', function(cb) {
-	gulp.src('./build/less/style.css')
+	return gulp.src('./build/less/style.css')
 		.pipe(sourcemaps.init())
 		.pipe(less())
 		.pipe(minifycss())
@@ -58,7 +59,7 @@ gulp.task('dist:css', function(cb) {
 		.pipe(gulp.dest('./dist/css'))
 });
 
-gulp.task('dev', ['dev:css', 'dev:browsersync', 'dev:watch']);
+gulp.task('dev', ['dev:watch', 'dev:css', 'dev:browsersync']);
 
 gulp.task('vendor', ['vendor:css']);
 
