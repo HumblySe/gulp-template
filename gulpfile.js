@@ -12,6 +12,7 @@ var gulp = 		  require('gulp'),
 	watch = 	  require('gulp-watch'),
 	devConfig =   require("./config/webpack.dev.config.js"), // Load webpack dev config
     devCompiler = webpack(devConfig), // create a single instance of the compiler to allow caching
+    publicdir =   env.publicdirectory,
 
 	checkError = function(status) {
         if (status.compilation.errors.length > 0) {
@@ -19,19 +20,18 @@ var gulp = 		  require('gulp'),
         }
     },
 
+    // Help
     help = function() {
         console.log();
-        console.log(gutil.colors.dim('#####################################'));
-        console.log(gutil.colors.dim('#################STAY#HUMBLE#ASK#FOR#'));
+        console.log(gutil.colors.dim('#################################'));
         console.log();
-        console.log(gutil.colors.dim('  ##  ##  #######  ##     ######'));
-        console.log(gutil.colors.dim('  ##  ##  ##       ##     ##  ##' ));
-        console.log(gutil.colors.dim('  ######  #####    ##     ######'));
-        console.log(gutil.colors.dim('  ##  ##  ##       ##     ##'));
-        console.log(gutil.colors.dim('  ##  ##  #######  #####  ##'));
+        console.log(gutil.colors.dim(' ##  ##  #######  ##     ######'));
+        console.log(gutil.colors.dim(' ##  ##  ##       ##     ##  ##' ));
+        console.log(gutil.colors.dim(' ######  #####    ##     ######'));
+        console.log(gutil.colors.dim(' ##  ##  ##       ##     ##'));
+        console.log(gutil.colors.dim(' ##  ##  #######  #####  ##'));
         console.log();
-        console.log(gutil.colors.dim('############################HUMBLE'));
-
+        console.log(gutil.colors.dim('###########STAY#HUMBLE###########'));
 
         console.log();
         console.log(gutil.colors.underline('Avaiable tasks:'));
@@ -42,12 +42,12 @@ var gulp = 		  require('gulp'),
         console.log();
 
         console.log(gutil.colors.underline('Libraries & plugins:'));
-        console.log('Edit the', gutil.colors.bold('vendors'), 'in', gutil.colors.cyan('package.json'));
+        console.log('Edit the', gutil.colors.bold('vendors'), 'in', gutil.colors.cyan('environment.json'));
         console.log();
 
         console.log(gutil.colors.underline('Paths:'));
-        console.log('Developement files: ', gutil.colors.bold('app_path'), 'in', gutil.colors.cyan('package.json'));
-        console.log('Libraries & plugins:', gutil.colors.bold('vendor_path'), 'in', gutil.colors.cyan('package.json'));
+        console.log('Developement files: ', gutil.colors.bold('app_path'), 'in', gutil.colors.cyan('environment.json'));
+        console.log('Libraries & plugins:', gutil.colors.bold('vendor_path'), 'in', gutil.colors.cyan('environment.json'));
         console.log();
 
         console.log(gutil.colors.underline('NOTE:'));
@@ -58,6 +58,7 @@ var gulp = 		  require('gulp'),
 
     };
 
+// Dev webpack task
 gulp.task("dev:webpack", function(callback) {
     // run webpack
     devCompiler.run(function(err, status) {
@@ -73,6 +74,7 @@ gulp.task("dev:webpack", function(callback) {
     });
 });
 
+// Vendor webpack task
 gulp.task("vendor:webpack", function(callback) {
 
     config.resolveDependencies();
@@ -94,6 +96,7 @@ gulp.task("vendor:webpack", function(callback) {
     });
 });
 
+// Dist webpack task
 gulp.task("dist:webpack", function(callback) {
 
     var fName = "dist.bundle.js";
@@ -131,21 +134,22 @@ gulp.task("dist:webpack", function(callback) {
     });
 });
 
-// dev tasks
+// CSS
 gulp.task('dev:css', function(cb) {
 	return gulp.src('./build/less/style.less')
 		.pipe(sourcemaps.init())
 		.pipe(less())
         .on('error', gutil.log)
 		.pipe(sourcemaps.write())
-		.pipe(gulp.dest('./dist/css'))
+		.pipe(gulp.dest(publicdir + '/css'))
 		.pipe(browsersync.stream());
 });
 
+// Watch task
 gulp.task('dev:watch', function() {
 
-	gutil.log(gutil.colors.green("Now watching"), '[', gutil.colors.cyan(config.app_path), ']\n');
-    watch(config.app_path, function() {
+	gutil.log(gutil.colors.green("Now watching"), '[', gutil.colors.cyan(env.js_build_path), ']\n');
+    watch(env.js_build_path, function() {
         gulp.run(["dev:webpack"]);
     });
 
@@ -154,23 +158,24 @@ gulp.task('dev:watch', function() {
 
 });
 
+// Browsersync
 gulp.task('dev:browsersync', function() {
-	var options = env.proxy ? { proxy: env.proxy } : { server: { basedir: './'} };
-    options.files = ['/dist/css/style.css'];
+	var options = env.proxy ? { proxy: env.proxy } : { server: { baseDir: publicdir } };
+    options.files = [publicdir + '/css/style.css'];
     options.port = env.port;
 	browsersync.init(options);
 });
 
-// vendor tasks
+// Vendor tasks
 gulp.task('vendor:css', function(cb) {
 	return gulp.src('./build/less/vendor.less')
 		.pipe(sourcemaps.init())
 		.pipe(less())
 		.pipe(sourcemaps.write())
-		.pipe(gulp.dest('./dist/css'))
+		.pipe(gulp.dest(publicdir + '/css'))
 });
 
-// dist tasks
+// Dist vendors css
 gulp.task('dist:vendor-css', function(cb) {
 	return gulp.src('./build/less/vendor.less')
 		.pipe(sourcemaps.init())
@@ -178,9 +183,10 @@ gulp.task('dist:vendor-css', function(cb) {
 		.pipe(minifycss())
 		.pipe(rename('vendor.min.css'))
 		.pipe(sourcemaps.write())
-		.pipe(gulp.dest('./dist/css'))
+		.pipe(gulp.dest(publicdir + '/dist/css'))
 });
 
+// Dist css
 gulp.task('dist:css', function(cb) {
 	return gulp.src('./build/less/style.css')
 		.pipe(sourcemaps.init())
@@ -188,10 +194,12 @@ gulp.task('dist:css', function(cb) {
 		.pipe(minifycss())
 		.pipe(rename('style.min.css'))
 		.pipe(sourcemaps.write())
-		.pipe(gulp.dest('./dist/css'))
+		.pipe(gulp.dest(publicdir + '/css'))
 });
 
 // Register actual tasks
 gulp.task('dev', ['vendor:webpack', 'dev:css', 'dev:webpack', 'dev:watch', 'dev:browsersync']);
 gulp.task('vendor', ['vendor:css', 'vendor:webpack']);
 gulp.task('dist', ['dist:vendor-css','dist:css', 'dist:webpack']);
+gulp.task('default', help);
+gulp.task('help', help);
