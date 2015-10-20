@@ -31,6 +31,7 @@ module.exports = {
     },
 
     plugins: [
-        new config.webpack.optimize.DedupePlugin()
+        new config.webpack.optimize.DedupePlugin(),
+        // new config.webpack.HotModuleReplacementPlugin()
     ]
 };
