@@ -9,14 +9,15 @@
     <script src="/dist/vendors.js" type="text/javascript"></script>
     <script src="/dist/bundle.js" type="text/javascript"></script>
 </head>
-<body>
-    <div class="container">
+<body ng-app="test">
+    <div class="container" ng-controller="hest as ctrl">
+        <h1>{{ ctrl.val }}</h1>
         <div class="row">
             <div class="col-sm-6 col-sm-offset-3">
                 <h1>Hello.</h1>
                 <h5>I am a default page.</h5>
                 <p>Please replace me with something nicer.</p>
-<a href="#" data-toggle="tooltip" title="Some tooltip text!">Hover over me</a>
+                <a href="#" data-toggle="tooltip" title="Some tooltip text!">Hover over me</a>
             </div>
         </div>
     </div>

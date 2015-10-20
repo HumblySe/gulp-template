@@ -74,6 +74,7 @@ gulp.task("dev:webpack", function(callback) {
     });
 });
 
+
 // Vendor webpack task
 gulp.task("vendor:webpack", function(callback) {
 
@@ -94,7 +95,9 @@ gulp.task("vendor:webpack", function(callback) {
             callback();
         }
     });
+
 });
+
 
 // Dist webpack task
 gulp.task("dist:webpack", function(callback) {
@@ -198,7 +201,7 @@ gulp.task('dist:css', function(cb) {
 });
 
 // Register actual tasks
-gulp.task('dev', ['vendor:webpack', 'dev:css', 'dev:webpack', 'dev:watch', 'dev:browsersync']);
+gulp.task('dev', ['dev:css', 'dev:webpack', 'dev:watch', 'dev:browsersync']);
 gulp.task('vendor', ['vendor:css', 'vendor:webpack']);
 gulp.task('dist', ['dist:vendor-css','dist:css', 'dist:webpack']);
 gulp.task('default', help);

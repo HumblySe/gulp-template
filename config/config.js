@@ -25,7 +25,7 @@ module.exports = {
         this.vendors = this.vendors.concat(pkg.js_vendors);
 
         this.node_modules = path.resolve('./node_modules');
-
+        this.resolveDependencies();
         return this;
     },
 

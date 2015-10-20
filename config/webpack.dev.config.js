@@ -6,7 +6,8 @@ module.exports = {
     context: __dirname,
 
     entry: {
-        main: '../build/js/main.js'
+        main: '../build/js/main.js',
+        vendors: config.vendors
     },
 
     output: {
@@ -24,14 +25,19 @@ module.exports = {
         loaders: [
             {
                 test: /\.js$/,
-                exclude: /node_modules/,
+                exclude: /node_modules/, // TODO: exclude all vendor folders
                 loaders: ['babel-loader']
             }
         ]
     },
 
     plugins: [
-        new config.webpack.optimize.DedupePlugin(),
+        new config.webpack.ProvidePlugin({
+            jQuery: 'jquery',
+            $: 'jquery',
+            'window.jQuery': 'jquery'
+        }),
+        new config.webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js')
         // new config.webpack.HotModuleReplacementPlugin()
     ]
 };

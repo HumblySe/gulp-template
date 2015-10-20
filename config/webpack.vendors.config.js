@@ -39,9 +39,9 @@ module.exports = {
             }
         }),
         new config.webpack.ProvidePlugin({
-            $: 'jquery',
             jQuery: 'jquery',
-            "window.jQuery": 'jquery'
+            $: 'jquery',
+            bootstrap: 'bootstrap'
         })
     ]
 };
