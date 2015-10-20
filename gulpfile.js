@@ -7,6 +7,7 @@ var minifycss = require('gulp-minify-css');
 var sourcemaps = require('gulp-sourcemaps');
 var rename = require('gulp-rename');
 var browsersync = require('browser-sync').create();
+var publicdir = '.' + env.publicdirectory;
 
 // dev tasks
 gulp.task('dev:css', function(cb) {
@@ -15,7 +16,7 @@ gulp.task('dev:css', function(cb) {
 		.pipe(less())
         .on('error', gutil.log)
 		.pipe(sourcemaps.write())
-		.pipe(gulp.dest('./dist/css'))
+		.pipe(gulp.dest(publicdir + '/css'))
 		.pipe(browsersync.stream());
 });
 
@@ -24,8 +25,8 @@ gulp.task('dev:watch', function() {
 });
 
 gulp.task('dev:browsersync', function() {
-	var options = env.proxy ? { proxy: env.proxy } : { server: { basedir: './'} };
-    options.files = ['/dist/css/style.css'];
+	var options = env.proxy ? { proxy: env.proxy } : { server: { baseDir: publicdir } };
+    options.files = [publicdir + '/css/style.css'];
     options.port = env.port;
 	browsersync.init(options);
 });
@@ -36,7 +37,7 @@ gulp.task('vendor:css', function(cb) {
 		.pipe(sourcemaps.init())
 		.pipe(less())
 		.pipe(sourcemaps.write())
-		.pipe(gulp.dest('./dist/css'))
+		.pipe(gulp.dest(publicdir + '/css'))
 });
 
 // dist tasks
@@ -47,7 +48,7 @@ gulp.task('dist:vendor-css', function(cb) {
 		.pipe(minifycss())
 		.pipe(rename('vendor.min.css'))
 		.pipe(sourcemaps.write())
-		.pipe(gulp.dest('./dist/css'))
+		.pipe(gulp.dest(publicdir + '/dist/css'))
 });
 gulp.task('dist:css', function(cb) {
 	return gulp.src('./build/less/style.css')
@@ -56,7 +57,7 @@ gulp.task('dist:css', function(cb) {
 		.pipe(minifycss())
 		.pipe(rename('style.min.css'))
 		.pipe(sourcemaps.write())
-		.pipe(gulp.dest('./dist/css'))
+		.pipe(gulp.dest(publicdir + '/css'))
 });
 
 gulp.task('dev', ['dev:watch', 'dev:css', 'dev:browsersync']);

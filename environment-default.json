@@ -1,5 +1,6 @@
 {
 	"environment": "dev",
 	"proxy": "127.0.0.1:8888",
-    "port": "9999"
+    "port": "9999",
+    "publicdirectory": "/dist"
 }
