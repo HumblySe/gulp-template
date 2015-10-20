@@ -6,7 +6,7 @@ module.exports = {
     */
     vendors: [],
     app_path: [],
-    vendor_path: [], // Resolved on runtime.
+    vendor_path: ['./bower_components/'], // Resolved on runtime. Added default bower_component
 
     // Internal vars
     node_modules: null,
@@ -20,9 +20,9 @@ module.exports = {
             pkg = require('../environment-default.json');
 
         // Concat path to files
-        this.vendor_path = this.vendor_path.concat(pkg.vendor_path);
-        this.app_path = this.app_path.concat(pkg.app_path);
-        this.vendors = this.vendors.concat(pkg.vendors);
+        this.vendor_path = this.vendor_path.concat(pkg.js_vendor_path);
+        this.app_path = this.app_path.concat(pkg.js_build__path);
+        this.vendors = this.vendors.concat(pkg.js_vendors);
 
         this.node_modules = path.resolve('./node_modules');
 
@@ -33,7 +33,6 @@ module.exports = {
 
         var t = this,
             gutil = require('gulp-util');
-
 
         console.log();
         gutil.log('Resolving dependencies');

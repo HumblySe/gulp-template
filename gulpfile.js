@@ -1,14 +1,3 @@
-/*
-    var gulp = require('gulp');
-var gutil = require('gulp-util');
-var env = require('./environment.json');
-var concat = require('gulp-concat');
-var less = require('gulp-less');
-var minifycss = require('gulp-minify-css');
-var sourcemaps = require('gulp-sourcemaps');
-var rename = require('gulp-rename');
-var browsersync = require('browser-sync').create();
-*/
 var gulp = 		  require('gulp'),
 	gutil = 	  require("gulp-util"),
 	env = 		  require('./environment-default.json'),
