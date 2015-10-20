@@ -35,7 +35,7 @@ module.exports = {
             gutil = require('gulp-util');
 
         console.log();
-        gutil.log('Resolving JavaScript dependencies');
+        gutil.log('Resolving JS dependencies');
         t.vendors = t.vendors.reduce(function(vendors, vendor) {
             var initialLength = vendors.length;
 
