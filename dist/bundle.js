@@ -10,11 +10,13 @@ webpackJsonp([0],[
 
 	// Import from sibling file
 
+	// Below imports needs to be specified in environment.json
+
 	var _bower_componentsAngular = __webpack_require__(2);
 
 	var _bower_componentsAngular2 = _interopRequireDefault(_bower_componentsAngular);
 
-	// Import from bower_component
+	// Import from bower_component.
 
 	var _jquery = __webpack_require__(4);
 
@@ -33,7 +35,6 @@ webpackJsonp([0],[
 	// Import node_library
 
 	(0, _moreScript.plus)(_moreScript.one, _moreScript.two);
-
 	(0, _pluginsAsdf.ping)();
 
 	_bower_componentsAngular2['default'].module('test', []);

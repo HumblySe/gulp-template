@@ -6,8 +6,9 @@ module.exports = {
     */
     vendors: [],
     app_path: [],
-    vendor_path: ['./bower_components/'], // Resolved on runtime. Added default bower_component
+    vendor_path: ['./node_modules', './bower_components/'], // Resolved on runtime. Added default bower_component
 
+    vendors_unresolved: null,
     // Internal vars
     node_modules: null,
     webpack: require('webpack'),
@@ -36,6 +37,7 @@ module.exports = {
 
         console.log();
         gutil.log('Resolving JS dependencies');
+        t.vendors_unresolved = t.vendors;
         t.vendors = t.vendors.reduce(function(vendors, vendor) {
             var initialLength = vendors.length;
 

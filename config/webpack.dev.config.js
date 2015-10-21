@@ -15,17 +15,12 @@ module.exports = {
         filename: "bundle.js"
     },
 
-    resolveLoader: {
-        modulesDirectories: [
-            config.node_modules
-        ]
-    },
 
     module: {
         loaders: [
             {
                 test: /\.js$/,
-                exclude: /node_modules/, // TODO: exclude all vendor folders
+                exclude: new RegExp(config.vendors_unresolved.join("|")), // Exclude all vendors
                 loaders: ['babel-loader']
             }
         ]
@@ -38,6 +33,5 @@ module.exports = {
             'window.jQuery': 'jquery'
         }),
         new config.webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js')
-        // new config.webpack.HotModuleReplacementPlugin()
     ]
 };
