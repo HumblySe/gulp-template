@@ -11,21 +11,19 @@ module.exports = {
     },
 
     output: {
-        path: "dist",
+        path: config.publicdirectory + "/js",
         filename: "bundle.js"
     },
 
-    resolveLoader: {
-        modulesDirectories: [
-            config.node_modules
-        ]
+    resolve: {
+        modulesDirectories: config.vendor_path
     },
 
     module: {
         loaders: [
             {
                 test: /\.js$/,
-                exclude: makeVendorRegex(), // TODO: exclude all vendor folders
+                exclude: new RegExp(config.vendors.join("|")), // Exclude all vendors
                 loaders: ['babel-loader']
             }
         ]
@@ -38,7 +36,6 @@ module.exports = {
             'window.jQuery': 'jquery'
         }),
         new config.webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js')
-        // new config.webpack.HotModuleReplacementPlugin()
     ]
 };
 function makeVendorRegex() {
