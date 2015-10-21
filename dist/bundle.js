@@ -10,30 +10,31 @@ webpackJsonp([0],[
 
 	// Import from sibling file
 
-	var _bower_componentsAngular = __webpack_require__(2);
+	// Below imports needs to be specified in environment.json
+
+	var _bower_componentsAngular = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../../bower_components/angular\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 
 	var _bower_componentsAngular2 = _interopRequireDefault(_bower_componentsAngular);
 
-	// Import from bower_component
+	// Import from bower_component.
 
-	var _jquery = __webpack_require__(4);
+	var _jquery = __webpack_require__(2);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
 	// Import from node_modules (jQuery is global)
 
-	var _pluginsAsdf = __webpack_require__(5);
+	var _pluginsAsdf = __webpack_require__(3);
 
 	// Import plugin from library.
 
-	var _pleaseAjax = __webpack_require__(6);
+	var _pleaseAjax = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"please-ajax\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 
 	var _pleaseAjax2 = _interopRequireDefault(_pleaseAjax);
 
 	// Import node_library
 
 	(0, _moreScript.plus)(_moreScript.one, _moreScript.two);
-
 	(0, _pluginsAsdf.ping)();
 
 	_bower_componentsAngular2['default'].module('test', []);

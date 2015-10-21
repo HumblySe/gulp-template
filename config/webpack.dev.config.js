@@ -1,6 +1,6 @@
 'use strict';
 var config = require('./config');
-
+console.log("TEST: " + makeVendorRegex());
 module.exports = {
 
     context: __dirname,
@@ -25,7 +25,7 @@ module.exports = {
         loaders: [
             {
                 test: /\.js$/,
-                exclude: /node_modules/, // TODO: exclude all vendor folders
+                exclude: makeVendorRegex(), // TODO: exclude all vendor folders
                 loaders: ['babel-loader']
             }
         ]
@@ -41,3 +41,9 @@ module.exports = {
         // new config.webpack.HotModuleReplacementPlugin()
     ]
 };
+function makeVendorRegex() {
+    var regexescaped = config.vendors.map(function(vendor) {
+        return vendor.replace('.././','').replace('\\','\\\\').replace('.','\\.');
+    }).join('|');
+    return new RegExp(regexescaped);
+}
