@@ -102,9 +102,7 @@ gulp.task("vendor:webpack", function(callback) {
 // Dist webpack task
 gulp.task("dist:webpack", function(callback) {
 
-    var fName = "dist.bundle.js";
     gutil.log('Building for production');
-    config.resolveDependencies();
 
     var prodConfig = Object.create(devConfig);
 
@@ -119,7 +117,7 @@ gulp.task("dist:webpack", function(callback) {
     ]);
 
     prodConfig.entry.main = config.vendors.concat(prodConfig.entry.main);
-    prodConfig.output.filename = fName;
+    prodConfig.output.path = 'dist/prod/js/';
 
     webpack(prodConfig, function(err, status) {
         if (err) {
@@ -129,7 +127,6 @@ gulp.task("dist:webpack", function(callback) {
             checkError(status);
             gutil.log("[dist:webpack]", status.toString({ colors: true }));
             console.log();
-            gutil.log(gutil.colors.green('Output to', fName));
             gutil.log(gutil.colors.green('May the deployment gods smile upon you'));
             console.log();
             callback();
@@ -184,9 +181,8 @@ gulp.task('dist:vendor-css', function(cb) {
 		.pipe(sourcemaps.init())
 		.pipe(less())
 		.pipe(minifycss())
-		.pipe(rename('vendor.min.css'))
 		.pipe(sourcemaps.write())
-		.pipe(gulp.dest(publicdir + '/dist/css'))
+		.pipe(gulp.dest(publicdir + '/prod/css'))
 });
 
 // Dist css
@@ -195,13 +191,12 @@ gulp.task('dist:css', function(cb) {
 		.pipe(sourcemaps.init())
 		.pipe(less())
 		.pipe(minifycss())
-		.pipe(rename('style.min.css'))
 		.pipe(sourcemaps.write())
-		.pipe(gulp.dest(publicdir + '/css'))
+		.pipe(gulp.dest(publicdir + '/prod/css'))
 });
 
 // Register actual tasks
-gulp.task('dev', ['dev:css', 'dev:webpack', 'dev:watch', 'dev:browsersync']);
+gulp.task('dev', ['dist:vendor-css', 'dev:css', 'dev:webpack', 'dev:watch', 'dev:browsersync']);
 gulp.task('vendor', ['vendor:css', 'vendor:webpack']);
 gulp.task('dist', ['dist:vendor-css','dist:css', 'dist:webpack']);
 gulp.task('default', help);

@@ -1,10 +1,10 @@
 import { one, two, plus } from './moreScript'; // Import from sibling file
 
 // Below imports needs to be specified in environment.json
-import angular from '../../bower_components/angular'; // Import from bower_component.
 import $ from 'jquery'; // Import from node_modules (jQuery is global)
-import { ping } from '../plugins/asdf'; // Import plugin from library.
 import plz from 'please-ajax'; // Import node_library
+import angular from 'angular'; // Import from bower_component.
+import { ping } from 'asdf'; // Import plugin from library.
 
 plus(one, two);
 ping();

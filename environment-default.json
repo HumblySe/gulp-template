@@ -13,12 +13,12 @@
     ],
 
     "js_vendor_path": [
-        "./build/plugins/"
+        "build/plugins/"
     ],
 
     "js_build_path": [
         "./build/js/**.js"
     ],
 
-    "publicdirectory": "./dist"
+    "publicdirectory": "assets"
 }

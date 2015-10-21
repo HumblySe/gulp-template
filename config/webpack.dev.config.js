@@ -11,16 +11,19 @@ module.exports = {
     },
 
     output: {
-        path: "dist",
+        path: config.publicdirectory + "/js",
         filename: "bundle.js"
     },
 
+    resolve: {
+        modulesDirectories: config.vendor_path
+    },
 
     module: {
         loaders: [
             {
                 test: /\.js$/,
-                exclude: new RegExp(config.vendors_unresolved.join("|")), // Exclude all vendors
+                exclude: new RegExp(config.vendors.join("|")), // Exclude all vendors
                 loaders: ['babel-loader']
             }
         ]
