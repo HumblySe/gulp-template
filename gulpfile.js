@@ -1,6 +1,6 @@
 var gulp = 		  require('gulp'),
 	gutil = 	  require("gulp-util"),
-	env = 		  require('./environment-default.json'),
+	env = 		  require('./environment.json'),
 	concat = 	  require('gulp-concat'),
 	less = 		  require('gulp-less'),
 	minifycss =   require('gulp-minify-css'),
@@ -10,9 +10,12 @@ var gulp = 		  require('gulp'),
 	webpack = 	  require('webpack'),
 	config = 	  require('./config/config.js'),
 	watch = 	  require('gulp-watch'),
+    mustache =    require('gulp-mustache'),
 	devConfig =   require("./config/webpack.dev.config.js"), // Load webpack dev config
     devCompiler = webpack(devConfig), // create a single instance of the compiler to allow caching
     publicdir =   env.publicdirectory,
+    cssdir =      publicdir + env.cssdirectory,
+    jsdir =       publicdir + env.jsdirectory
 
 	checkError = function(status) {
         if (status.compilation.errors.length > 0) {
@@ -117,7 +120,7 @@ gulp.task("dist:webpack", function(callback) {
     ]);
 
     prodConfig.entry.main = config.vendors.concat(prodConfig.entry.main);
-    prodConfig.output.path = 'dist/prod/js/';
+    prodConfig.output.path = env.publicdirectory + env.jsdirectory;
 
     webpack(prodConfig, function(err, status) {
         if (err) {
@@ -141,7 +144,7 @@ gulp.task('dev:css', function(cb) {
 		.pipe(less())
         .on('error', gutil.log)
 		.pipe(sourcemaps.write())
-		.pipe(gulp.dest(publicdir + '/css'))
+		.pipe(gulp.dest(cssdir))
 		.pipe(browsersync.stream());
 });
 
@@ -158,10 +161,22 @@ gulp.task('dev:watch', function() {
 
 });
 
+gulp.task('dev:templates', function() {
+    return gulp.src('./templates/*.mustache')
+        .pipe(mustache({
+            cssdir: env.cssdirectory,
+            jsdir: env.jsdirectory
+         }))
+        .pipe(rename(function(path) {
+            path.extname = '.html'
+        }))
+        .pipe(gulp.dest(publicdir));
+});
+
 // Browsersync
-gulp.task('dev:browsersync', function() {
+gulp.task('dev:browsersync', ['dev:css','dev:webpack','dev:templates'], function() {
 	var options = env.proxy ? { proxy: env.proxy } : { server: { baseDir: publicdir } };
-    options.files = [publicdir + '/css/style.css'];
+    options.files = [cssdir];
     options.port = env.port;
 	browsersync.init(options);
 });
@@ -172,7 +187,7 @@ gulp.task('vendor:css', function(cb) {
 		.pipe(sourcemaps.init())
 		.pipe(less())
 		.pipe(sourcemaps.write())
-		.pipe(gulp.dest(publicdir + '/css'))
+		.pipe(gulp.dest(cssdir));
 });
 
 // Dist vendors css
@@ -182,7 +197,7 @@ gulp.task('dist:vendor-css', function(cb) {
 		.pipe(less())
 		.pipe(minifycss())
 		.pipe(sourcemaps.write())
-		.pipe(gulp.dest(publicdir + '/prod/css'))
+		.pipe(gulp.dest(cssdir));
 });
 
 // Dist css
@@ -192,11 +207,12 @@ gulp.task('dist:css', function(cb) {
 		.pipe(less())
 		.pipe(minifycss())
 		.pipe(sourcemaps.write())
-		.pipe(gulp.dest(publicdir + '/prod/css'))
+        .pipe(rename('style.min.css'))
+		.pipe(gulp.dest(cssdir));
 });
 
 // Register actual tasks
-gulp.task('dev', ['dist:vendor-css', 'dev:css', 'dev:webpack', 'dev:watch', 'dev:browsersync']);
+gulp.task('dev', ['dist:vendor-css', 'dev:css', 'dev:webpack', 'dev:templates', 'dev:watch', 'dev:browsersync']);
 gulp.task('vendor', ['vendor:css', 'vendor:webpack']);
 gulp.task('dist', ['dist:vendor-css','dist:css', 'dist:webpack']);
 gulp.task('default', help);

@@ -1,6 +1,5 @@
 'use strict';
 var config = require('./config');
-console.log("TEST: " + makeVendorRegex());
 module.exports = {
 
     context: __dirname,
@@ -11,7 +10,7 @@ module.exports = {
     },
 
     output: {
-        path: config.publicdirectory + "/js",
+        path: config.publicdirectory + config.jsdirectory,
         filename: "bundle.js"
     },
 
@@ -38,9 +37,3 @@ module.exports = {
         new config.webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js')
     ]
 };
-function makeVendorRegex() {
-    var regexescaped = config.vendors.map(function(vendor) {
-        return vendor.replace('.././','').replace('\\','\\\\').replace('.','\\.');
-    }).join('|');
-    return new RegExp(regexescaped);
-}

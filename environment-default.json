@@ -20,5 +20,7 @@
         "./build/js/**.js"
     ],
 
-    "publicdirectory": "assets"
+    "publicdirectory": "public",
+    "cssdirectory": "/assets/css",
+    "jsdirectory": "/assets/js"
 }
