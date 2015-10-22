@@ -131,8 +131,8 @@ gulp.task('dev:watch', function() {
         gulp.run(["dev:webpack"]);
     });
 
-    gutil.log(gutil.colors.green("Now watching"), '[', gutil.colors.cyan('./build/less/style.less'), ']\n');
-    return gulp.watch('./build/less/style.less', ['dev:css']);
+    gutil.log(gutil.colors.green("Now watching"), '[', gutil.colors.cyan('./build/less/**/*.less'), ']\n');
+    return gulp.watch('./build/less/**/*.less', ['dev:css']);
 
 });
 
@@ -152,6 +152,7 @@ gulp.task('dev:templates', function() {
 gulp.task('dev:browsersync', ['dev:css','dev:webpack','dev:templates'], function() {
 	var options = env.proxy ? { proxy: env.proxy } : { server: { baseDir: publicdir } };
     options.files = [cssdir];
+    options.online = true;
     options.port = env.port;
 	browsersync.init(options);
 });
