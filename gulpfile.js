@@ -77,31 +77,6 @@ gulp.task("dev:webpack", function(callback) {
     });
 });
 
-
-// Vendor webpack task
-gulp.task("vendor:webpack", function(callback) {
-
-    config.resolveDependencies();
-
-    // Load webpack vendors config
-    var vendorConfig = require("./config/webpack.vendors.config.js");
-
-    // run webpack for vendors
-    webpack(vendorConfig, function(err, status) {
-
-        if (err) {
-            gutil.beep();
-            throw new gutil.PluginError("vendor:webpack", err);
-        } else {
-            checkError(status);
-            gutil.log("[vendor:webpack]", status.toString({ colors: true }));
-            callback();
-        }
-    });
-
-});
-
-
 // Dist webpack task
 gulp.task("dist:webpack", function(callback) {
 
@@ -182,8 +157,8 @@ gulp.task('dev:browsersync', ['dev:css','dev:webpack','dev:templates'], function
 });
 
 // Vendor tasks
-gulp.task('vendor:css', function(cb) {
-	return gulp.src('./build/less/vendor.less')
+gulp.task('vendors:css', function(cb) {
+	return gulp.src('./build/less/vendors.less')
 		.pipe(sourcemaps.init())
 		.pipe(less())
 		.pipe(sourcemaps.write())
@@ -191,8 +166,8 @@ gulp.task('vendor:css', function(cb) {
 });
 
 // Dist vendors css
-gulp.task('dist:vendor-css', function(cb) {
-	return gulp.src('./build/less/vendor.less')
+gulp.task('dist:vendors-css', function(cb) {
+	return gulp.src('./build/less/vendors.less')
 		.pipe(sourcemaps.init())
 		.pipe(less())
 		.pipe(minifycss())
@@ -212,8 +187,8 @@ gulp.task('dist:css', function(cb) {
 });
 
 // Register actual tasks
-gulp.task('dev', ['dist:vendor-css', 'dev:css', 'dev:webpack', 'dev:templates', 'dev:watch', 'dev:browsersync']);
-gulp.task('vendor', ['vendor:css', 'vendor:webpack']);
-gulp.task('dist', ['dist:vendor-css','dist:css', 'dist:webpack']);
+gulp.task('dev', ['dist:vendors-css', 'dev:css', 'dev:webpack', 'dev:templates', 'dev:watch', 'dev:browsersync']);
+gulp.task('vendors', ['vendors:css', 'vendors:webpack']);
+gulp.task('dist', ['dist:vendors-css','dist:css', 'dist:webpack']);
 gulp.task('default', help);
 gulp.task('help', help);
