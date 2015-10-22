@@ -5,7 +5,7 @@
 
     "js_vendors": [
         "jquery",
-        "bootstrap",
+        "bootstrap"
     ],
 
     "js_vendor_path": [
