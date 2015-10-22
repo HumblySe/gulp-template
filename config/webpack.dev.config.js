@@ -97,21 +97,7 @@ module.exports = {
         requireCapitalizedConstructors: true,
         requireDotNotation: true,
         requireSemicolons: true,
-        validateParameterSeparator: ", ",
-/*
-        "jsDoc": {
-            "checkAnnotations": "closurecompiler",
-            "checkParamNames": true,
-            "requireParamTypes": true,
-            "checkRedundantParams": true,
-            "checkReturnTypes": true,
-            "checkRedundantReturns": true,
-            "requireReturnTypes": true,
-            "checkTypes": true,
-            "checkRedundantAccess": true,
-            "requireNewlineAfterDescription": true
-        }
-*/
+        validateParameterSeparator: ", "
     },
 
     module: {

@@ -4,12 +4,8 @@
     "port": "9999",
 
     "js_vendors": [
-        "please-ajax",
-        "asdf",
         "jquery",
         "bootstrap",
-        "marquee",
-        "angular"
     ],
 
     "js_vendor_path": [
