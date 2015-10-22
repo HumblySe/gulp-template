@@ -188,8 +188,8 @@ gulp.task('dist:css', function(cb) {
 });
 
 // Register actual tasks
-gulp.task('dev', ['dist:vendors-css', 'dev:css', 'dev:webpack', 'dev:templates', 'dev:watch', 'dev:browsersync']);
-gulp.task('vendors', ['vendors:css', 'vendors:webpack']);
+gulp.task('dev', ['dist:vendors-css', 'dev:css', 'dev:webpack', 'dev:watch', 'dev:browsersync']);
+gulp.task('vendors', ['vendors:css']);
 gulp.task('dist', ['dist:vendors-css','dist:css', 'dist:webpack']);
 gulp.task('default', help);
 gulp.task('help', help);
