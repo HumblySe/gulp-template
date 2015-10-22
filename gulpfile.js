@@ -172,6 +172,7 @@ gulp.task('dist:vendors-css', function(cb) {
 		.pipe(less())
 		.pipe(minifycss())
 		.pipe(sourcemaps.write())
+        .rename('vendors.min.css')
 		.pipe(gulp.dest(cssdir));
 });
 
