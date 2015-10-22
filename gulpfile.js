@@ -183,7 +183,7 @@ gulp.task('dist:css', function(cb) {
 		.pipe(less())
 		.pipe(minifycss())
 		.pipe(sourcemaps.write())
-        rename('style.min.css')
+        .pipe(rename('style.min.css'))
 		.pipe(gulp.dest(cssdir));
 });
 
