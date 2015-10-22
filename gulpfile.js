@@ -17,14 +17,13 @@ var gulp = 		  require('gulp'),
     cssdir =      publicdir + env.cssdirectory,
     jsdir =       publicdir + env.jsdirectory
 
-	checkError = function(status) {
+	checkError = function(status) { // fn beep if compilation errors
         if (status.compilation.errors.length > 0) {
             gutil.beep();
         }
     },
 
-    // Help
-    help = function() {
+    help = function() { // fn to log help
         console.log();
         console.log(gutil.colors.dim('#################################'));
         console.log();
@@ -82,8 +81,9 @@ gulp.task("dist:webpack", function(callback) {
 
     gutil.log('Building for production');
 
-    var prodConfig = Object.create(devConfig);
+    var prodConfig = Object.create(devConfig); // Copy dev config
 
+    // Add plugins for production
     prodConfig.plugins = devConfig.plugins.concat([
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.UglifyJsPlugin({
@@ -94,10 +94,10 @@ gulp.task("dist:webpack", function(callback) {
         })
     ]);
 
-    prodConfig.entry.main = config.vendors.concat(prodConfig.entry.main);
-    prodConfig.output.path = env.publicdirectory + env.jsdirectory;
+    prodConfig.entry.main = config.vendors.concat(prodConfig.entry.main); // Merge all files to bundle.js
+    prodConfig.output.path = env.publicdirectory + env.jsdirectory; // Switch output directory to production
 
-    webpack(prodConfig, function(err, status) {
+    webpack(prodConfig, function(err, status) { // Run webkpack with production conf
         if (err) {
             gutil.beep();
             throw new gutil.PluginError("dist:webpack", err);
@@ -105,7 +105,7 @@ gulp.task("dist:webpack", function(callback) {
             checkError(status);
             gutil.log("[dist:webpack]", status.toString({ colors: true }));
             console.log();
-            gutil.log(gutil.colors.green('May the deployment gods smile upon you'));
+            gutil.log(gutil.colors.green('May the force be with you'));
             console.log();
             callback();
         }
