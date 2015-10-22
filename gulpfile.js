@@ -172,7 +172,7 @@ gulp.task('dist:vendors-css', function(cb) {
 		.pipe(less())
 		.pipe(minifycss())
 		.pipe(sourcemaps.write())
-        .rename('vendors.min.css')
+        .pipe(rename('vendors.min.css'))
 		.pipe(gulp.dest(cssdir));
 });
 
@@ -183,7 +183,7 @@ gulp.task('dist:css', function(cb) {
 		.pipe(less())
 		.pipe(minifycss())
 		.pipe(sourcemaps.write())
-        .pipe(rename('style.min.css'))
+        rename('style.min.css')
 		.pipe(gulp.dest(cssdir));
 });
 
