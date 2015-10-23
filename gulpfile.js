@@ -149,7 +149,7 @@ gulp.task('dev:templates', function() {
 });
 
 // Browsersync
-gulp.task('dev:browsersync', ['dev:css','dev:webpack','dev:templates'], function() {
+gulp.task('dev:browsersync', ['dev:css','dev:webpack'], function() {
 	var options = env.proxy ? { proxy: env.proxy } : { server: { baseDir: publicdir } };
     options.files = [cssdir];
     options.online = true;
