@@ -136,7 +136,7 @@ gulp.task('dev:watch', function() {
 
 });
 
-gulp.task('dev:templates', function() {
+gulp.task('templates', function() {
     return gulp.src('./templates/*.mustache')
         .pipe(mustache({
             cssdir: env.cssdirectory,
