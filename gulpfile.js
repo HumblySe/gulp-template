@@ -114,7 +114,7 @@ gulp.task("dist:webpack", function(callback) {
 
 // CSS
 gulp.task('dev:css', function(cb) {
-	return gulp.src('./build/less/style.less')
+	return gulp.src(env.less_build_path + env.less_main_file)
 		.pipe(sourcemaps.init())
 		.pipe(less())
         .on('error', gutil.log)
@@ -126,13 +126,13 @@ gulp.task('dev:css', function(cb) {
 // Watch task
 gulp.task('dev:watch', function() {
 
-	gutil.log(gutil.colors.green("Now watching"), '[', gutil.colors.cyan(env.js_build_path), ']\n');
-    watch(env.js_build_path, function() {
+	gutil.log(gutil.colors.green("Now watching"), '[', gutil.colors.cyan(env.js_build_path + env.js_watch_path), ']\n');
+    watch(env.js_build_path + env.js_watch_path, function() {
         gulp.run(["dev:webpack"]);
     });
 
-    gutil.log(gutil.colors.green("Now watching"), '[', gutil.colors.cyan('./build/less/**/*.less'), ']\n');
-    return gulp.watch('./build/less/**/*.less', ['dev:css']);
+    gutil.log(gutil.colors.green("Now watching"), '[', gutil.colors.cyan(env.less_build_path + env.less_watch_path), ']\n');
+    return gulp.watch(env.less_build_path + env.less_watch_path, ['dev:css']);
 
 });
 
@@ -159,7 +159,7 @@ gulp.task('dev:browsersync', ['dev:css','dev:webpack'], function() {
 
 // Vendor tasks
 gulp.task('vendors:css', function(cb) {
-	return gulp.src('./build/less/vendors.less')
+	return gulp.src(env.less_build_path + env.less_vendor_file)
 		.pipe(sourcemaps.init())
 		.pipe(less())
 		.pipe(sourcemaps.write())
@@ -168,18 +168,18 @@ gulp.task('vendors:css', function(cb) {
 
 // Dist vendors css
 gulp.task('dist:vendors-css', function(cb) {
-	return gulp.src('./build/less/vendors.less')
+	return gulp.src(env.less_build_path + env.less_vendor_file)
 		.pipe(sourcemaps.init())
 		.pipe(less())
 		.pipe(minifycss())
 		.pipe(sourcemaps.write())
-        .pipe(rename('vendors.min.css'))
+        .pipe(rename('vendors.css'))
 		.pipe(gulp.dest(cssdir));
 });
 
 // Dist css
 gulp.task('dist:css', function(cb) {
-	return gulp.src('./build/less/style.less')
+	return gulp.src(env.less_build_path + env.less_main_file)
 		.pipe(sourcemaps.init())
 		.pipe(less())
 		.pipe(minifycss())
@@ -190,7 +190,7 @@ gulp.task('dist:css', function(cb) {
 
 // Register actual tasks
 gulp.task('dev', ['dist:vendors-css', 'dev:css', 'dev:webpack', 'dev:watch', 'dev:browsersync']);
-gulp.task('vendors', ['vendors:css']);
-gulp.task('dist', ['dist:vendors-css','dist:css', 'dist:webpack']);
+gulp.task('vendors', ['vendors:css', 'dev:webpack']);
+gulp.task('dist', ['dist:vendors-css','dist:css', 'dist:webpack'], function(cb) { gutil.log('Outputing to folder:', gutil.colors.bold(gutil.colors.green(env.publicdirectory))); cb(); });
 gulp.task('default', help);
 gulp.task('help', help);
