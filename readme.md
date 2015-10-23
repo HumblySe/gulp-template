@@ -7,7 +7,10 @@ Browsersync is included. It is by default set to proxy a server at http://localh
 
 This is a work in progress.
 
-## Setup
+## Usage
+    npm i -g gulp
+    npm i
+    gulp dev
 
 ### Wordpress/Umbraco
 
