@@ -118,8 +118,8 @@ module.exports = {
 
     plugins: [
         new config.webpack.ProvidePlugin({
-            jQuery: 'jquery',
-            $: 'jquery',
+            'jQuery': 'jquery',
+            '$': 'jquery',
             'window.jQuery': 'jquery'
         }),
         new config.webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js')

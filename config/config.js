@@ -19,14 +19,14 @@ module.exports = {
 
         var gutil = require('gulp-util'),
             path = require('path'),
-            pkg = require('../environment.json');
+            pkg = require('../package.json');
 
         // Concat path to files
-        this.vendor_path = this.vendor_path.concat(pkg.js_vendor_path);
-        this.app_path = this.app_path.concat(pkg.js_build__path);
-        this.vendors = this.vendors.concat(pkg.js_vendors);
-        this.publicdirectory = pkg.publicdirectory;
-        this.jsdirectory = pkg.jsdirectory;
+        this.vendor_path = this.vendor_path.concat(pkg.buildConfig.js_vendor_path);
+        this.app_path = this.app_path.concat(pkg.buildConfig.js_build__path);
+        this.vendors = this.vendors.concat(pkg.buildConfig.js_vendors);
+        this.publicdirectory = pkg.buildConfig.publicdirectory;
+        this.jsdirectory = pkg.buildConfig.jsdirectory;
 
         // this.node_modules = path.resolve('./node_modules');
         return this;

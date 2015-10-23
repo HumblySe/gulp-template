@@ -13,9 +13,10 @@ var gulp = 		  require('gulp'),
     mustache =    require('gulp-mustache'),
 	devConfig =   require("./config/webpack.dev.config.js"), // Load webpack dev config
     devCompiler = webpack(devConfig), // create a single instance of the compiler to allow caching
-    publicdir =   env.publicdirectory,
-    cssdir =      publicdir + env.cssdirectory,
-    jsdir =       publicdir + env.jsdirectory
+    pkg =         require("./package.json"),
+    publicdir =   pkg.buildConfig.publicdirectory,
+    cssdir =      publicdir + pkg.buildConfig.cssdirectory,
+    jsdir =       publicdir + pkg.buildConfig.jsdirectory
 
 	checkError = function(status) { // fn beep if compilation errors
         if (status.compilation.errors.length > 0) {
@@ -95,7 +96,7 @@ gulp.task("dist:webpack", function(callback) {
     ]);
 
     prodConfig.entry.main = config.vendors.concat(prodConfig.entry.main); // Merge all files to bundle.js
-    prodConfig.output.path = env.publicdirectory + env.jsdirectory; // Switch output directory to production
+    prodConfig.output.path = pkg.buildConfig.publicdirectory + pkg.buildConfig.jsdirectory; // Switch output directory to production
 
     webpack(prodConfig, function(err, status) { // Run webkpack with production conf
         if (err) {
@@ -126,8 +127,8 @@ gulp.task('dev:css', function(cb) {
 // Watch task
 gulp.task('dev:watch', function() {
 
-	gutil.log(gutil.colors.green("Now watching"), '[', gutil.colors.cyan(env.js_build_path), ']\n');
-    watch(env.js_build_path, function() {
+	gutil.log(gutil.colors.green("Now watching"), '[', gutil.colors.cyan(pkg.buildConfig.js_build_path), ']\n');
+    watch(pkg.buildConfig.js_build_path, function() {
         gulp.run(["dev:webpack"]);
     });
 
@@ -139,8 +140,8 @@ gulp.task('dev:watch', function() {
 gulp.task('dev:templates', function() {
     return gulp.src('./templates/*.mustache')
         .pipe(mustache({
-            cssdir: env.cssdirectory,
-            jsdir: env.jsdirectory
+            cssdir: pkg.buildConfig.cssdirectory,
+            jsdir: pkg.buildConfig.jsdirectory
          }))
         .pipe(rename(function(path) {
             path.extname = '.html'

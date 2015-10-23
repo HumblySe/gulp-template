@@ -1,22 +1,5 @@
 {
 	"environment": "dev",
 	"proxy": "127.0.0.1:8888",
-    "port": "9999",
-
-    "js_vendors": [
-        "jquery",
-        "bootstrap"
-    ],
-
-    "js_vendor_path": [
-        "build/plugins/"
-    ],
-
-    "js_build_path": [
-        "./build/js/**.js"
-    ],
-
-    "publicdirectory": "public",
-    "cssdirectory": "/assets/css",
-    "jsdirectory": "/assets/js"
+    "port": "9999"
 }

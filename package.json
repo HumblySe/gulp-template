@@ -47,5 +47,24 @@
   "dependencies": {
     "bootstrap": "^3.3.5",
     "jquery": "^2.1.4"
+  },
+  "buildConfig": {
+    "js_vendors": [
+        "please-ajax",
+        "asdf",
+        "jquery",
+        "bootstrap",
+        "marquee",
+        "angular"
+    ],
+    "js_vendor_path": [
+        "build/plugins"
+    ],
+    "js_build_path": [
+        "/build/js/**.js"
+    ],
+    "publicdirectory": "public",
+    "cssdirectory": "/assets/css",
+    "jsdirectory": "/assets/js"
   }
 }
