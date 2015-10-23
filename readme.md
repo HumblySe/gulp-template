@@ -37,7 +37,7 @@ This is a work in progress.
 `js_vendors`: Array of vendor names to include in solution
 
 `js_vendor_path`: Array of custom paths to vendor files
-> (Default js_vendor_path values are web_components, node_modules and bower_components)
+*(Default js_vendor_path values are web_components, node_modules and bower_components)*
 
 `js_build_path`: Paths to JS work files
 
@@ -84,3 +84,15 @@ If no `environment.json proxy` address is given, Browsersync will start it's own
 
 #### gulp default or gulp help
 Gives you some help
+
+## Adding external JS dependencies
+### NPM
+1. npm i -D [Package name]
+2. Add package name to `environment.json js_vendors array`
+3. Run gulp vendors
+4. Rock'n'Roll
+
+### Other
+1. Import to any of the `environment.json js_vendor_path's`
+2. Run gulp vendors
+3. Rock'n'Roll
