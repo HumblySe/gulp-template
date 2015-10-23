@@ -18,7 +18,6 @@ This is a work in progress.
 
 * Rename `environment-default.json` to `environment.json`
 
-
 * Adjust paths in `environment.json` to match your theme/site. `publicdirectory` should be set to the path to your theme in Wordpress and to `'.'` in Umbraco, you can leave `jsdirectory` and `cssdirectory` as they are.
 
 * Change proxy address to match the address where you reach the Wordpress/Umbraco installation.
@@ -62,25 +61,25 @@ This is a work in progress.
 
 ## Gulp tasks
 #### gulp dev
-* Concatinates vendor LESS & JS files on startup.
-* Watches dev LESS & JS at given paths (`environment.json js_build_path` for JS files, `environment.json less_dev_path` for LESS vendor files)
+* Concatenates vendor LESS & JS files on startup.
+* Watches dev LESS & JS at given paths (`package.json js_build_path` for JS files, `package.json less_dev_path` for LESS vendor files)
 * Runs browsersync
 * Outputs to `vendors.less`, `style.less`, `vendors.js` and `bundle.js`
 If no `environment.json proxy` address is given, Browsersync will start it's own server.
 
 #### gulp vendors
-* Concatinates vendor LESS files
-* Concationates all JS files.
+* Concatenates vendor LESS files
+* Concatenates all JS files.
 * Outputs to `vendors.less`, `vendors.js` and `bundle.js`
 
 #### gulp dist
-* Concatinates and minifies vendor LESS files
-* Concationates and minifies all JS files.
+* Concatenates and minifies vendor LESS files
+* Concatenates and minifies all JS files.
 * Outputs to `vendors.less`, `style.less` and `bundle.js`
 
 #### gulp template
-* Generates an index.html file from the `.mustache`
- file in `templates`
+* Generates an html files from the `.mustache`
+ files in `templates`
 
 #### gulp default or gulp help
 Gives you some help
@@ -88,11 +87,11 @@ Gives you some help
 ## Adding external JS dependencies
 ### NPM
 1. npm i -D [Package name]
-2. Add package name to `environment.json js_vendors array`
+2. Add package name to `package.json js_vendors array`
 3. Run gulp vendors
 4. Rock'n'Roll
 
 ### Other
-1. Import to any of the `environment.json js_vendor_path's`
+1. Import to any of the `package.json js_vendor_path's`
 2. Run gulp vendors
 3. Rock'n'Roll
