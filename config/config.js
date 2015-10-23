@@ -7,13 +7,95 @@ module.exports = {
     vendors: [],
     app_path: [],
     vendor_path: ['web_modules', 'node_modules', 'bower_components'], // Resolved on runtime. Added default bower_component
-
     vendors_unresolved: null,
+    provided_plugins: null,
+
     // Internal vars
     node_modules: null,
     webpack: require('webpack'),
     app_watchpath: null,
     publicdirectory: null,
+    mainfile: null,
+
+    jscs_options: {
+        emitErrors: true, // Make it beep!
+        failOnHint: false, // Abort on error?
+        requireCurlyBraces: [
+            "if",
+            "else",
+            "for",
+            "while",
+            "do",
+            "try",
+            "catch"
+        ],
+        requireOperatorBeforeLineBreak: true,
+        requireCamelCaseOrUpperCaseIdentifiers: true,
+        maximumLineLength: {
+            value: 80,
+            allExcept: ["comments", "regex"]
+        },
+        validateIndentation: 4,
+        validateQuoteMarks: "'",
+
+        disallowMultipleLineStrings: true,
+        disallowMixedSpacesAndTabs: true,
+        disallowTrailingWhitespace: true,
+        disallowSpaceAfterPrefixUnaryOperators: true,
+        disallowMultipleVarDecl: true,
+        disallowKeywordsOnNewLine: ["else"],
+
+        requireSpaceAfterKeywords: [
+          "if",
+          "else",
+          "for",
+          "while",
+          "do",
+          "switch",
+          "return",
+          "try",
+          "catch"
+        ],
+        requireSpaceBeforeBinaryOperators: [
+            "=", "+=", "-=", "*=", "/=", "%=", "<<=", ">>=", ">>>=",
+            "&=", "|=", "^=", "+=",
+
+            "+", "-", "*", "/", "%", "<<", ">>", ">>>", "&",
+            "|", "^", "&&", "||", "===", "==", ">=",
+            "<=", "<", ">", "!=", "!=="
+        ],
+        requireSpaceAfterBinaryOperators: true,
+        requireSpacesInConditionalExpression: true,
+        requireSpaceBeforeBlockStatements: true,
+        requireSpacesInForStatement: true,
+        requireLineFeedAtFileEnd: true,
+        requireSpacesInFunctionExpression: {
+            beforeOpeningCurlyBrace: true
+        },
+        disallowSpacesInAnonymousFunctionExpression: {
+            beforeOpeningRoundBrace: true
+        },
+        disallowSpacesInsideObjectBrackets: "all",
+        disallowSpacesInsideArrayBrackets: "all",
+        disallowSpacesInsideParentheses: true,
+
+        disallowMultipleLineBreaks: true,
+        disallowNewlineBeforeBlockStatements: true,
+        disallowKeywords: ["with"],
+        disallowSpacesInFunctionExpression: {
+            beforeOpeningRoundBrace: true
+        },
+        disallowSpacesInFunctionDeclaration: {
+            beforeOpeningRoundBrace: true
+        },
+        disallowSpacesInCallExpression: true,
+        disallowSpaceAfterObjectKeys: true,
+        requireSpaceBeforeObjectValues: true,
+        requireCapitalizedConstructors: true,
+        requireDotNotation: true,
+        requireSemicolons: true,
+        validateParameterSeparator: ", "
+    },
 
     init: function() {
 
@@ -27,8 +109,8 @@ module.exports = {
         this.vendors = this.vendors.concat(pkg.buildConfig.js_vendors);
         this.publicdirectory = pkg.buildConfig.publicdirectory;
         this.jsdirectory = pkg.buildConfig.jsdirectory;
-
-        // this.node_modules = path.resolve('./node_modules');
+        this.mainfile = '.' + pkg.buildConfig.js_build_path + pkg.buildConfig.js_main;
+        this.provided_plugins = pkg.buildConfig.js_provided_plugins;
         return this;
     }
 }.init();

@@ -7,7 +7,7 @@ module.exports = {
     context: __dirname,
 
     entry: {
-        main: '../build/js/main.js',
+        main: config.mainfile ,
         vendors: config.vendors
     },
 
@@ -20,85 +20,7 @@ module.exports = {
         modulesDirectories: config.vendor_path
     },
 
-    jscs: {
-        emitErrors: true, // Make it beep!
-        failOnHint: false, // Abort on error?
-        requireCurlyBraces: [
-            "if",
-            "else",
-            "for",
-            "while",
-            "do",
-            "try",
-            "catch"
-        ],
-        requireOperatorBeforeLineBreak: true,
-        requireCamelCaseOrUpperCaseIdentifiers: true,
-        maximumLineLength: {
-            value: 80,
-            allExcept: ["comments", "regex"]
-        },
-        validateIndentation: 4,
-        validateQuoteMarks: "'",
-
-        disallowMultipleLineStrings: true,
-        disallowMixedSpacesAndTabs: true,
-        disallowTrailingWhitespace: true,
-        disallowSpaceAfterPrefixUnaryOperators: true,
-        disallowMultipleVarDecl: true,
-        disallowKeywordsOnNewLine: ["else"],
-
-        requireSpaceAfterKeywords: [
-          "if",
-          "else",
-          "for",
-          "while",
-          "do",
-          "switch",
-          "return",
-          "try",
-          "catch"
-        ],
-        requireSpaceBeforeBinaryOperators: [
-            "=", "+=", "-=", "*=", "/=", "%=", "<<=", ">>=", ">>>=",
-            "&=", "|=", "^=", "+=",
-
-            "+", "-", "*", "/", "%", "<<", ">>", ">>>", "&",
-            "|", "^", "&&", "||", "===", "==", ">=",
-            "<=", "<", ">", "!=", "!=="
-        ],
-        requireSpaceAfterBinaryOperators: true,
-        requireSpacesInConditionalExpression: true,
-        requireSpaceBeforeBlockStatements: true,
-        requireSpacesInForStatement: true,
-        requireLineFeedAtFileEnd: true,
-        requireSpacesInFunctionExpression: {
-            beforeOpeningCurlyBrace: true
-        },
-        disallowSpacesInAnonymousFunctionExpression: {
-            beforeOpeningRoundBrace: true
-        },
-        disallowSpacesInsideObjectBrackets: "all",
-        disallowSpacesInsideArrayBrackets: "all",
-        disallowSpacesInsideParentheses: true,
-
-        disallowMultipleLineBreaks: true,
-        disallowNewlineBeforeBlockStatements: true,
-        disallowKeywords: ["with"],
-        disallowSpacesInFunctionExpression: {
-            beforeOpeningRoundBrace: true
-        },
-        disallowSpacesInFunctionDeclaration: {
-            beforeOpeningRoundBrace: true
-        },
-        disallowSpacesInCallExpression: true,
-        disallowSpaceAfterObjectKeys: true,
-        requireSpaceBeforeObjectValues: true,
-        requireCapitalizedConstructors: true,
-        requireDotNotation: true,
-        requireSemicolons: true,
-        validateParameterSeparator: ", "
-    },
+    jscs: config.jscs_options,
 
     module: {
         preLoaders: [{
