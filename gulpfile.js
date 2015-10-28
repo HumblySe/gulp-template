@@ -16,7 +16,8 @@ var gulp = 		  require('gulp'),
     pkg =         require("./package.json"),
     publicdir =   pkg.buildConfig.publicdirectory,
     cssdir =      publicdir + pkg.buildConfig.cssdirectory,
-    jsdir =       publicdir + pkg.buildConfig.jsdirectory
+    jsdir =       publicdir + pkg.buildConfig.jsdirectory,
+    dist_directory = pkg.buildConfig.dist_directory,
 
 	checkError = function(status) { // fn beep if compilation errors
         if (status.compilation.errors.length > 0) {
@@ -95,8 +96,19 @@ gulp.task("dist:webpack", function(callback) {
         })
     ]);
 
+    prodConfig.output.filename = 'bundle.min.js'; // Change name to bundle.min.js
     prodConfig.entry.main = config.vendors.concat(prodConfig.entry.main); // Merge all files to bundle.js
-    prodConfig.output.path = pkg.buildConfig.publicdirectory + pkg.buildConfig.jsdirectory; // Switch output directory to production
+    delete prodConfig.entry.vendors;
+    prodConfig.output.path = dist_directory; // Switch output directory to production
+    prodConfig.plugins = prodConfig.plugins.filter(function(item) {
+        var plugin_name = item.constructor.name;
+        if ('CommonsChunkPlugin' !== plugin_name) {
+            return true;
+        } else {
+            return false;
+        }
+    });
+
 
     webpack(prodConfig, function(err, status) { // Run webkpack with production conf
         if (err) {
@@ -174,8 +186,8 @@ gulp.task('dist:vendors-css', function(cb) {
 		.pipe(less())
 		.pipe(minifycss())
 		.pipe(sourcemaps.write())
-        .pipe(rename('vendors.css'))
-		.pipe(gulp.dest(cssdir));
+        .pipe(rename('vendors.min.css'))
+		.pipe(gulp.dest(dist_directory));
 });
 
 // Dist css
@@ -186,12 +198,12 @@ gulp.task('dist:css', function(cb) {
 		.pipe(minifycss())
 		.pipe(sourcemaps.write())
         .pipe(rename('style.min.css'))
-		.pipe(gulp.dest(cssdir));
+		.pipe(gulp.dest(dist_directory));
 });
 
 // Register actual tasks
-gulp.task('dev', ['dist:vendors-css', 'dev:css', 'dev:webpack', 'dev:watch', 'dev:browsersync']);
+gulp.task('dev', ['vendors:css', 'dev:css', 'dev:webpack', 'dev:watch', 'dev:browsersync']);
 gulp.task('vendors', ['vendors:css', 'dev:webpack']);
-gulp.task('dist', ['dist:vendors-css','dist:css', 'dist:webpack'], function(cb) { gutil.log('Outputing to folder:', gutil.colors.bold(gutil.colors.green(pkg.buildConfig.publicdirectory))); cb(); });
+gulp.task('dist', ['dist:vendors-css','dist:css', 'dist:webpack'], function(cb) { gutil.log('Outputing to folder:', gutil.colors.bold(gutil.colors.green(pkg.buildConfig.dist_directory))); cb(); });
 gulp.task('default', help);
 gulp.task('help', help);

@@ -65,8 +65,9 @@
     "less_vendor_file": "vendors.less",
     "less_main_file": "style.less",
     "less_watch_path": "**/*.less",
-    "publicdirectory": "public",
-    "cssdirectory": "/assets/css",
-    "jsdirectory": "/assets/js"
+    "cssdirectory": "/css",
+    "jsdirectory": "/js",
+    "publicdirectory": "development",
+    "dist_directory": "distribution"
   }
 }
