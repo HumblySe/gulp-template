@@ -115,7 +115,7 @@ gulp.task("dist:webpack", function(callback) {
 
 // CSS
 gulp.task('dev:css', function(cb) {
-	return gulp.src(env.less_build_path + env.less_main_file)
+	return gulp.src(pkg.buildConfig.less_build_path + pkg.buildConfig.less_main_file)
 		.pipe(sourcemaps.init())
 		.pipe(less())
         .on('error', gutil.log)
