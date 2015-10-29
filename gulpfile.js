@@ -14,10 +14,10 @@ var gulp =        require('gulp'),
     devConfig =   require("./config/webpack.dev.config.js"), // Load webpack dev config
     devCompiler = webpack(devConfig), // create a single instance of the compiler to allow caching
     pkg =         require("./package.json"),
-    publicdir =   pkg.buildConfig.publicdirectory,
+    publicdir =   pkg.buildConfig.rootpath + pkg.buildConfig.publicdirectory,
     cssdir =      publicdir + pkg.buildConfig.cssdirectory,
     jsdir =       publicdir + pkg.buildConfig.jsdirectory,
-    dist_directory = pkg.buildConfig.dist_directory,
+    dist_directory = pkg.buildConfig.rootpath + pkg.buildConfig.dist_directory,
 
     checkError = function(status) { // fn beep if compilation errors
         if (status.compilation.errors.length > 0) {

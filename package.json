@@ -49,6 +49,7 @@
     "jquery": "^2.1.4"
   },
   "buildConfig": {
+
     "js_vendors": [
         "jquery",
         "bootstrap"
@@ -59,14 +60,18 @@
     "js_build_path": [
         "./build/js/"
     ],
+
     "js_main": "main.js",
     "js_watch_path": "**.js",
+    "jsdirectory": "/js",
+
     "less_build_path": "./build/less/",
     "less_vendor_file": "vendors.less",
     "less_main_file": "style.less",
     "less_watch_path": "**/*.less",
     "cssdirectory": "/css",
-    "jsdirectory": "/js",
+
+    "rootpath": "",
     "publicdirectory": "development",
     "dist_directory": "distribution"
   }
