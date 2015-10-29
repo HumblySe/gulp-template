@@ -26,7 +26,7 @@ This is a work in progress.
 
 * Run `gulp dev` - this will parse and concatenate the javascript files in `build/js`, as well as the dependencies these may have from installed modules. Common modules (i e vendors) will be separated into their own chunk and saved as `vendors.js`, whereas the app/site specific js will be saved into `bundle.js`. This task will also start the Browsersync service and open a web browser pointing to it.
 
-## Configuration 
+## Configuration
 
 ### environment.json
 
@@ -39,25 +39,28 @@ This is a work in progress.
 ### package.json
 
 (in addition to standard dependency stuff)
-
-#### JS
-* `js_vendors`: Array of vendor names to include in solution
-* `js_vendor_path`: Array of custom paths to vendor files
-*(Default js_vendor_path values are web_components, node_modules and bower_components)*
-* `js_build_path`: Paths to JS work files
-* `js_main`:  Filename of main JS file
-* `js_watch_path`: Path of JS files to watch
-
-#### LESS
-* `less_build_path`: Paths to LESS work files
-* `less_vendor_file`: Path to main vendor import file
-* `less_main_file`: Filename of main LESS file
-* `less_watch_path`: Path of LESS files to watch
-
 #### Export paths
 * `publicdirectory`: Directory to export to
 * `cssdirectory`: CSS Subdirectory to export to
 * `jsdirectory`: JS Subdirectory to export to
+
+
+#### Javascript
+* `js_main`: "main.js", Filename of main JS file
+* `js_watch_path`: "**.js", Path of JS files to watch
+
+#### Less
+* `less_main_file`: "style.less", Filename of main LESS file
+* `less_build_path`: "./build/less/", Paths to LESS work files
+* `less_vendor_file`: "vendors.less", Path to main vendor import file
+* `less_watch_path`: "**/*.less", Path of LESS files to watch
+
+## Export paths
+* `jsdirectory`: "/js", Export path for Javascript files
+* `cssdirectory`: "/css",   Export path for CSS files
+* `rootpath`: ", Path to solution root
+* `publicdirectory`: "development", Path to export dev files
+* `dist_directory`: "distribution" Path to export to dist files
 
 ## Gulp tasks
 #### gulp dev
