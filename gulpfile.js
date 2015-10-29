@@ -167,31 +167,21 @@ gulp.task('vendors:css', function(cb) {
 		.pipe(gulp.dest(cssdir));
 });
 
-// Dist vendors css
-gulp.task('dist:vendors-css', function(cb) {
-	return gulp.src(pkg.buildConfig.less_build_path + pkg.buildConfig.less_vendor_file)
-		.pipe(sourcemaps.init())
-		.pipe(less())
-		.pipe(minifycss())
-		.pipe(sourcemaps.write())
-        .pipe(rename('vendors.css'))
-		.pipe(gulp.dest(cssdir));
-});
-
 // Dist css
 gulp.task('dist:css', function(cb) {
-	return gulp.src(pkg.buildConfig.less_build_path + pkg.buildConfig.less_main_file)
-		.pipe(sourcemaps.init())
-		.pipe(less())
-		.pipe(minifycss())
-		.pipe(sourcemaps.write())
+    return gulp.src([pkg.buildConfig.less_build_path + pkg.buildConfig.less_vendor_file,pkg.buildConfig.less_build_path + pkg.buildConfig.less_main_file])
+        .pipe(sourcemaps.init())
+        .pipe(less())
+        .pipe(concat('merged.css'))
+        .pipe(minifycss({keepSpecialComments:0,advanced:false}))
+        .pipe(sourcemaps.write())
         .pipe(rename('style.min.css'))
-		.pipe(gulp.dest(cssdir));
+        .pipe(gulp.dest(cssdir));
 });
 
 // Register actual tasks
 gulp.task('dev', ['dist:vendors-css', 'dev:css', 'dev:webpack', 'dev:watch', 'dev:browsersync']);
 gulp.task('vendors', ['vendors:css', 'dev:webpack']);
-gulp.task('dist', ['dist:vendors-css','dist:css', 'dist:webpack'], function(cb) { gutil.log('Outputing to folder:', gutil.colors.bold(gutil.colors.green(pkg.buildConfig.publicdirectory))); cb(); });
+gulp.task('dist', ['dist:css', 'dist:webpack'], function(cb) { gutil.log('Outputing to folder:', gutil.colors.bold(gutil.colors.green(pkg.buildConfig.publicdirectory))); cb(); });
 gulp.task('default', help);
 gulp.task('help', help);
