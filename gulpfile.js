@@ -1,24 +1,25 @@
-var gulp = 		  require('gulp'),
-	gutil = 	  require("gulp-util"),
-	env = 		  require('./environment.json'),
-	concat = 	  require('gulp-concat'),
-	less = 		  require('gulp-less'),
-	minifycss =   require('gulp-minify-css'),
-	sourcemaps =  require('gulp-sourcemaps'),
-	rename = 	  require('gulp-rename'),
-	browsersync = require('browser-sync').create(),
-	webpack = 	  require('webpack'),
-	config = 	  require('./config/config.js'),
-	watch = 	  require('gulp-watch'),
+var gulp =        require('gulp'),
+    gutil =       require("gulp-util"),
+    env =         require('./environment.json'),
+    concat =      require('gulp-concat'),
+    less =        require('gulp-less'),
+    minifycss =   require('gulp-minify-css'),
+    sourcemaps =  require('gulp-sourcemaps'),
+    rename =      require('gulp-rename'),
+    browsersync = require('browser-sync').create(),
+    webpack =     require('webpack'),
+    config =      require('./config/config.js'),
+    watch =       require('gulp-watch'),
     mustache =    require('gulp-mustache'),
-	devConfig =   require("./config/webpack.dev.config.js"), // Load webpack dev config
+    devConfig =   require("./config/webpack.dev.config.js"), // Load webpack dev config
     devCompiler = webpack(devConfig), // create a single instance of the compiler to allow caching
     pkg =         require("./package.json"),
     publicdir =   pkg.buildConfig.publicdirectory,
     cssdir =      publicdir + pkg.buildConfig.cssdirectory,
-    jsdir =       publicdir + pkg.buildConfig.jsdirectory
+    jsdir =       publicdir + pkg.buildConfig.jsdirectory,
+    dist_directory = pkg.buildConfig.dist_directory,
 
-	checkError = function(status) { // fn beep if compilation errors
+    checkError = function(status) { // fn beep if compilation errors
         if (status.compilation.errors.length > 0) {
             gutil.beep();
         }
@@ -95,8 +96,19 @@ gulp.task("dist:webpack", function(callback) {
         })
     ]);
 
+    prodConfig.output.filename = 'bundle.min.js'; // Change name to bundle.min.js
     prodConfig.entry.main = config.vendors.concat(prodConfig.entry.main); // Merge all files to bundle.js
-    prodConfig.output.path = pkg.buildConfig.publicdirectory + pkg.buildConfig.jsdirectory; // Switch output directory to production
+    delete prodConfig.entry.vendors;
+    prodConfig.output.path = dist_directory; // Switch output directory to production
+    prodConfig.plugins = prodConfig.plugins.filter(function(item) {
+        var plugin_name = item.constructor.name;
+        if ('CommonsChunkPlugin' !== plugin_name) {
+            return true;
+        } else {
+            return false;
+        }
+    });
+
 
     webpack(prodConfig, function(err, status) { // Run webkpack with production conf
         if (err) {
@@ -115,19 +127,19 @@ gulp.task("dist:webpack", function(callback) {
 
 // CSS
 gulp.task('dev:css', function(cb) {
-	return gulp.src(env.less_build_path + env.less_main_file)
-		.pipe(sourcemaps.init())
-		.pipe(less())
+    return gulp.src(pkg.buildConfig.less_build_path + pkg.buildConfig.less_main_file)
+        .pipe(sourcemaps.init())
+        .pipe(less())
         .on('error', gutil.log)
-		.pipe(sourcemaps.write())
-		.pipe(gulp.dest(cssdir))
-		.pipe(browsersync.stream());
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(cssdir))
+        .pipe(browsersync.stream());
 });
 
 // Watch task
 gulp.task('dev:watch', function() {
 
-	gutil.log(gutil.colors.green("Now watching"), '[', gutil.colors.cyan(pkg.buildConfig.js_build_path), ']\n');
+    gutil.log(gutil.colors.green("Now watching"), '[', gutil.colors.cyan(pkg.buildConfig.js_build_path), ']\n');
     watch(pkg.buildConfig.js_build_path, function() {
         gulp.run(["dev:webpack"]);
     });
@@ -151,20 +163,31 @@ gulp.task('templates', function() {
 
 // Browsersync
 gulp.task('dev:browsersync', ['dev:css','dev:webpack'], function() {
-	var options = env.proxy ? { proxy: env.proxy } : { server: { baseDir: publicdir } };
+    var options = env.proxy ? { proxy: env.proxy } : { server: { baseDir: publicdir } };
     options.files = [cssdir];
     options.online = true;
     options.port = env.port;
-	browsersync.init(options);
+    browsersync.init(options);
 });
 
 // Vendor tasks
 gulp.task('vendors:css', function(cb) {
-	return gulp.src(pkg.buildConfig.less_build_path + pkg.buildConfig.less_vendor_file)
-		.pipe(sourcemaps.init())
-		.pipe(less())
-		.pipe(sourcemaps.write())
-		.pipe(gulp.dest(cssdir));
+    return gulp.src(pkg.buildConfig.less_build_path + pkg.buildConfig.less_vendor_file)
+        .pipe(sourcemaps.init())
+        .pipe(less())
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(cssdir));
+});
+
+// Dist vendors css
+gulp.task('dist:vendors-css', function(cb) {
+    return gulp.src(pkg.buildConfig.less_build_path + pkg.buildConfig.less_vendor_file)
+        .pipe(sourcemaps.init())
+        .pipe(less())
+        .pipe(minifycss())
+        .pipe(sourcemaps.write())
+        .pipe(rename('vendors.min.css'))
+        .pipe(gulp.dest(dist_directory));
 });
 
 // Dist css
@@ -176,11 +199,11 @@ gulp.task('dist:css', function(cb) {
         .pipe(minifycss({keepSpecialComments:0,advanced:false}))
         .pipe(sourcemaps.write())
         .pipe(rename('style.min.css'))
-        .pipe(gulp.dest(cssdir));
+        .pipe(gulp.dest(dist_directory));
 });
 
 // Register actual tasks
-gulp.task('dev', ['dist:vendors-css', 'dev:css', 'dev:webpack', 'dev:watch', 'dev:browsersync']);
+gulp.task('dev', ['vendors:css', 'dev:css', 'dev:webpack', 'dev:watch', 'dev:browsersync']);
 gulp.task('vendors', ['vendors:css', 'dev:webpack']);
 gulp.task('dist', ['dist:css', 'dist:webpack'], function(cb) { gutil.log('Outputing to folder:', gutil.colors.bold(gutil.colors.green(pkg.buildConfig.publicdirectory))); cb(); });
 gulp.task('default', help);
