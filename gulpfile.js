@@ -130,10 +130,10 @@ gulp.task('dev:css', function(cb) {
     return gulp.src(pkg.buildConfig.less_build_path + pkg.buildConfig.less_main_file)
         .pipe(sourcemaps.init())
         .pipe(less())
-        .on('error', gutil.log)
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest(cssdir))
         .pipe(browsersync.stream());
+        .pipe(gulp.dest(cssdir))
+        .on('error', gutil.log)
 });
 
 // Watch task
@@ -164,8 +164,6 @@ gulp.task('templates', function() {
 // Browsersync
 gulp.task('dev:browsersync', ['dev:css','dev:webpack'], function() {
     var options = env.proxy ? { proxy: env.proxy } : { server: { baseDir: publicdir } };
-    options.files = [cssdir];
-    options.online = true;
     options.port = env.port;
     browsersync.init(options);
 });
@@ -203,7 +201,7 @@ gulp.task('dist:css', function(cb) {
 });
 
 // Register actual tasks
-gulp.task('dev', ['vendors:css', 'dev:css', 'dev:webpack', 'dev:watch', 'dev:browsersync']);
+gulp.task('dev', ['dev:css', 'dev:webpack', 'dev:watch', 'dev:browsersync']);
 gulp.task('vendors', ['vendors:css', 'dev:webpack']);
 gulp.task('dist', ['dist:css', 'dist:webpack'], function(cb) { gutil.log('Outputing to folder:', gutil.colors.bold(gutil.colors.green(pkg.buildConfig.publicdirectory))); cb(); });
 gulp.task('default', help);
