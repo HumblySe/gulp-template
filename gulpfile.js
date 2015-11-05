@@ -140,7 +140,7 @@ gulp.task('dev:css', function(cb) {
 gulp.task('dev:watch', function() {
 
     gutil.log(gutil.colors.green("Now watching"), '[', gutil.colors.cyan(pkg.buildConfig.js_build_path), ']\n');
-    watch(pkg.buildConfig.js_build_path, function() {
+    watch(pkg.buildConfig.js_build_path + pkg.buildConfig.js_watch_path, function() {
         gulp.run(["dev:webpack"]);
     });
 
