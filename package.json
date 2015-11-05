@@ -57,9 +57,7 @@
     "js_vendor_path": [
         "build/plugins/"
     ],
-    "js_build_path": [
-        "./build/js/"
-    ],
+    "js_build_path": "./build/js/",
 
     "js_main": "main.js",
     "js_watch_path": "**.js",
