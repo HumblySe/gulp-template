@@ -131,9 +131,9 @@ gulp.task('dev:css', function(cb) {
         .pipe(sourcemaps.init())
         .pipe(less())
         .pipe(sourcemaps.write())
-        .pipe(browsersync.stream());
+        .pipe(browsersync.stream())
         .pipe(gulp.dest(cssdir))
-        .on('error', gutil.log)
+        .on('error', gutil.log);
 });
 
 // Watch task
@@ -194,7 +194,7 @@ gulp.task('dist:css', function(cb) {
         .pipe(sourcemaps.init())
         .pipe(less())
         .pipe(concat('merged.css'))
-        .pipe(minifycss({keepSpecialComments:0,advanced:false}))
+        .pipe(minifycss({ keepSpecialComments:0, advanced:false }))
         .pipe(sourcemaps.write())
         .pipe(rename('style.min.css'))
         .pipe(gulp.dest(dist_directory));
