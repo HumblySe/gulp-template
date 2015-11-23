@@ -19,6 +19,18 @@ var gulp =        require('gulp'),
     jsdir =       publicdir + pkg.buildConfig.jsdirectory,
     dist_directory = pkg.buildConfig.rootpath + pkg.buildConfig.dist_directory,
 
+    lessError = function(error) {
+        gutil.beep();
+        gutil.log(gutil.colors.red(error.message));
+
+        error.extract.forEach(function(extract) {
+            if(extract !== undefined && extract !== '') {
+                gutil.log(gutil.colors.red(extract));
+            }
+        });
+
+    },
+
     checkError = function(status) { // fn beep if compilation errors
         if (status.compilation.errors.length > 0) {
             gutil.beep();
@@ -126,14 +138,18 @@ gulp.task("dist:webpack", function(callback) {
 });
 
 // CSS
-gulp.task('dev:css', function(cb) {
-    return gulp.src(pkg.buildConfig.less_build_path + pkg.buildConfig.less_main_file)
-        .pipe(sourcemaps.init())
-        .pipe(less())
+gulp.task('dev:css', function() {
+
+    var stream = gulp.src(pkg.buildConfig.less_build_path + pkg.buildConfig.less_main_file).on('error', function(e,b){
+        gutil.log(1);
+    });
+
+        stream.pipe(sourcemaps.init())
+        .pipe(less().on('error', lessError))
         .pipe(sourcemaps.write())
-        .pipe(browsersync.stream())
-        .pipe(gulp.dest(cssdir))
-        .on('error', gutil.log);
+        .pipe(browsersync.stream());
+
+    return stream;
 });
 
 // Watch task
