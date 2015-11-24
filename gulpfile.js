@@ -20,6 +20,7 @@ var gulp =        require('gulp'),
     dist_directory = pkg.buildConfig.rootpath + pkg.buildConfig.dist_directory,
 
     lessError = function(error) {
+        this.emit("end");
         gutil.beep();
         gutil.log(gutil.colors.red(error.message));
 
@@ -28,7 +29,6 @@ var gulp =        require('gulp'),
                 gutil.log(gutil.colors.red(extract));
             }
         });
-
     },
 
     checkError = function(status) { // fn beep if compilation errors
@@ -144,10 +144,11 @@ gulp.task('dev:css', function() {
         gutil.log(1);
     });
 
-        stream.pipe(sourcemaps.init())
+    stream.pipe(sourcemaps.init())
         .pipe(less().on('error', lessError))
         .pipe(sourcemaps.write())
-        .pipe(browsersync.stream());
+        .pipe(browsersync.stream())
+        .pipe(gulp.dest(cssdir));
 
     return stream;
 });
