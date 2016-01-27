@@ -12,12 +12,15 @@ var gulp =        require('gulp'),
     watch =       require('gulp-watch'),
     mustache =    require('gulp-mustache'),
     devConfig =   require("./config/webpack.dev.config.js"), // Load webpack dev config
-    pkg =         require("./package.json"),
+    pkg = require("./package.json"),
+
+    // Building relative paths from buildConfig object in package.json
     publicdir =   pkg.buildConfig.rootpath + pkg.buildConfig.publicdirectory,
     cssdir =      publicdir + pkg.buildConfig.cssdirectory,
     jsdir =       publicdir + pkg.buildConfig.jsdirectory,
     dist_directory = pkg.buildConfig.rootpath + pkg.buildConfig.dist_directory,
 
+    // Check if there are any LESS errors
     lessError = function(error) {
         this.emit("end");
         gutil.beep();
@@ -30,13 +33,15 @@ var gulp =        require('gulp'),
         });
     },
 
+    // Beep if there are errors
     checkError = function(status) { // fn beep if compilation errors
         if (status.compilation.errors.length > 0) {
             gutil.beep();
         }
     },
 
-    help = function() { // fn to log help
+    help = function () { // fn to log help
+        // TODO: Update content
         console.log();
         console.log(gutil.colors.dim('#################################'));
         console.log();
@@ -73,7 +78,7 @@ var gulp =        require('gulp'),
 
     };
 
-// Dev webpack task
+// Dev webpack, handles JS
 gulp.task("dev:webpack", function(callback) {
         // run webpack
         webpack(devConfig, (err, status)  => {
@@ -88,7 +93,7 @@ gulp.task("dev:webpack", function(callback) {
         });
 });
 
-// Dist webpack task
+// Dist webpack, handle JS for production
 gulp.task("dist:webpack", function(callback) {
 
     gutil.log('Building for production');
@@ -110,7 +115,8 @@ gulp.task("dist:webpack", function(callback) {
     prodConfig.entry.main = config.vendors.concat(prodConfig.entry.main); // Merge all files to bundle.js
     delete prodConfig.entry.vendors;
     prodConfig.output.path = dist_directory; // Switch output directory to production
-    prodConfig.plugins = prodConfig.plugins.filter(function(item) {
+
+    prodConfig.plugins = prodConfig.plugins.filter(function(item) { // Remove CommonsChunkPlugin
         var plugin_name = item.constructor.name;
         if ('CommonsChunkPlugin' !== plugin_name) {
             return true;
@@ -164,6 +170,7 @@ gulp.task('dev:watch', function() {
 
 });
 
+// Generate page templates from .mustache files
 gulp.task('templates', function() {
     return gulp.src('./templates/*.mustache')
         .pipe(mustache({
