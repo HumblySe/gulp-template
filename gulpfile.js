@@ -12,7 +12,6 @@ var gulp =        require('gulp'),
     watch =       require('gulp-watch'),
     mustache =    require('gulp-mustache'),
     devConfig =   require("./config/webpack.dev.config.js"), // Load webpack dev config
-    devCompiler = webpack(devConfig), // create a single instance of the compiler to allow caching
     pkg =         require("./package.json"),
     publicdir =   pkg.buildConfig.rootpath + pkg.buildConfig.publicdirectory,
     cssdir =      publicdir + pkg.buildConfig.cssdirectory,
@@ -76,18 +75,17 @@ var gulp =        require('gulp'),
 
 // Dev webpack task
 gulp.task("dev:webpack", function(callback) {
-    // run webpack
-    devCompiler.run(function(err, status) {
-
-        if (err) {
-            gutil.beep();
-            throw new gutil.PluginError("dev:webpack", err);
-        } else {
-            checkError(status);
-            gutil.log("[dev:webpack]", status.toString({ colors: true }));
-            callback();
-        }
-    });
+        // run webpack
+        webpack(devConfig, (err, status)  => {
+            if (err) {
+                gutil.beep();
+                throw new gutil.PluginError("dev:webpack", err);
+            } else {
+                checkError(status);
+                gutil.log("[dev:webpack]", status.toString({ colors: true }));
+                callback();
+            }
+        });
 });
 
 // Dist webpack task
