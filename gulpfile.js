@@ -1,47 +1,52 @@
-var gulp =        require('gulp'),
-    gutil =       require("gulp-util"),
-    env =         require('./environment.json'),
-    concat =      require('gulp-concat'),
-    less =        require('gulp-less'),
-    minifycss =   require('gulp-minify-css'),
-    sourcemaps =  require('gulp-sourcemaps'),
-    rename =      require('gulp-rename'),
+var gulp = require('gulp'),
+    gutil = require("gulp-util"),
+    concat = require('gulp-concat'),
+    less = require('gulp-less'),
+    minifycss = require('gulp-minify-css'),
+    sourcemaps = require('gulp-sourcemaps'),
+    rename = require('gulp-rename'),
     browsersync = require('browser-sync').create(),
-    webpack =     require('webpack'),
-    config =      require('./config/config.js'),
-    watch =       require('gulp-watch'),
-    mustache =    require('gulp-mustache'),
-    devConfig =   require("./config/webpack.dev.config.js"), // Load webpack dev config
+    webpack = require('webpack'),
+    config = require('./config/config.js'),
+    watch = require('gulp-watch'),
+    mustache = require('gulp-mustache'),
+    devConfig = require("./config/webpack.dev.config.js"), // Load webpack dev config
     pkg = require("./package.json"),
-
+    env = null,
     // Building relative paths from buildConfig object in package.json
-    publicdir =   pkg.buildConfig.rootpath + pkg.buildConfig.publicdirectory,
-    cssdir =      publicdir + pkg.buildConfig.cssdirectory,
-    jsdir =       publicdir + pkg.buildConfig.jsdirectory,
-    dist_directory = pkg.buildConfig.rootpath + pkg.buildConfig.dist_directory,
+    publicdir = pkg.buildConfig.rootpath + pkg.buildConfig.publicdirectory,
+    cssdir = publicdir + pkg.buildConfig.cssdirectory,
+    jsdir = publicdir + pkg.buildConfig.jsdirectory,
+    dist_directory = pkg.buildConfig.rootpath + pkg.buildConfig.dist_directory;
+
+    try {
+        env = require('./environment.json');
+    } catch (e) {
+        console.error('No environment.json defined, did you forget to copy & rename environment-default.json? ');
+        process.exit();
+    }
 
     // Check if there are any LESS errors
-    lessError = function(error) {
+    function lessError(error) {
         this.emit("end");
         gutil.beep();
         gutil.log(gutil.colors.red(error.message));
 
-        error.extract.forEach(function(extract) {
-            if(extract !== undefined && extract !== '') {
+        error.extract.forEach(function (extract) {
+            if (extract !== undefined && extract !== '') {
                 gutil.log(gutil.colors.red(extract));
             }
         });
-    },
+    };
 
     // Beep if there are errors
-    checkError = function(status) { // fn beep if compilation errors
+    function checkError(status) { // fn beep if compilation errors
         if (status.compilation.errors.length > 0) {
             gutil.beep();
         }
-    },
+    };
 
-    help = function () { // fn to log help
-        // TODO: Update content
+    function help() { // fn to log help
         console.log();
         console.log(gutil.colors.dim('#################################'));
         console.log();
@@ -56,18 +61,20 @@ var gulp =        require('gulp'),
         console.log();
         console.log(gutil.colors.underline('Avaiable tasks:'));
         console.log(gutil.colors.bold('help:'), 'this');
-        console.log(gutil.colors.bold('vendors:'), 'concatinate vendor files to', gutil.colors.cyan('vendor.js'));
-        console.log(gutil.colors.bold('dev:'), 'concatinate vendor to', gutil.colors.cyan('vendor.js'), 'and build to', gutil.colors.cyan('bundle.js'),'watches', gutil.colors.cyan('app_path'));
-        console.log(gutil.colors.bold('prod:'), 'concatinate and minfies all vendors and buildfiles to', gutil.colors.cyan('bundle.js'));
+        console.log(gutil.colors.bold('vendors:'), 'concatinate all vendor files');
+        console.log(gutil.colors.bold('dev:'), 'concatinate all vendor files and build to', gutil.colors.cyan('bundle.js'),'watches', gutil.colors.cyan('app_path'));
+        console.log(gutil.colors.bold('prod:'), 'concatinate and minifies all vendors and buildfiles to', gutil.colors.cyan('bundle.js'));
         console.log();
 
         console.log(gutil.colors.underline('Libraries & plugins:'));
-        console.log('Edit the', gutil.colors.bold('vendors'), 'in', gutil.colors.cyan('environment.json'));
+        console.log('Edit the', gutil.colors.bold('vendors'), 'in', gutil.colors.cyan('package.json'));
         console.log();
 
         console.log(gutil.colors.underline('Paths:'));
-        console.log('Developement files: ', gutil.colors.bold('app_path'), 'in', gutil.colors.cyan('environment.json'));
-        console.log('Libraries & plugins:', gutil.colors.bold('vendor_path'), 'in', gutil.colors.cyan('environment.json'));
+        console.log('Paths are defined in the buildConfig object in package.json, ');
+
+        console.log('Developement files: ', gutil.colors.bold('app_path'), 'in', gutil.colors.cyan('package.json'));
+        console.log('Libraries & plugins:', gutil.colors.bold('vendor_path'), 'in', gutil.colors.cyan('package.json'));
         console.log();
 
         console.log(gutil.colors.underline('NOTE:'));
@@ -81,7 +88,7 @@ var gulp =        require('gulp'),
 // Dev webpack, handles JS
 gulp.task("dev:webpack", function(callback) {
         // run webpack
-        webpack(devConfig, (err, status)  => {
+        webpack(devConfig, function(err, status) {
             if (err) {
                 gutil.beep();
                 throw new gutil.PluginError("dev:webpack", err);
